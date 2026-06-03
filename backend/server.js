@@ -67,6 +67,22 @@ app.get(["/", "/index.html"], (req, res) => {
   res.sendFile(path.join(projectRoot, "index.html"));
 });
 
+app.get(["/about-metar.html", "/pages/about-metar.html"], (req, res) => {
+  res.sendFile(path.join(projectRoot, "pages", "sobre-metar.html"));
+});
+
+app.get(["/decoder.html", "/pages/decoder.html"], (req, res) => {
+  res.sendFile(path.join(projectRoot, "pages", "decodificador.html"));
+});
+
+app.get(["/airports.html", "/pages/airports.html"], (req, res) => {
+  res.sendFile(path.join(projectRoot, "pages", "aerodromo.html"));
+});
+
+app.get(["/metar.html", "/pages/metar.html"], (req, res) => {
+  res.sendFile(path.join(projectRoot, "pages", "apiMet.html"));
+});
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({ error: "Endpoint not found" });

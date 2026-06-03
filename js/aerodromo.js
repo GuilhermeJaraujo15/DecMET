@@ -105,15 +105,14 @@ function formatElevation(value) {
 }
 
 // DOM Elements
-const searchForm = document.getElementById("airportSearchForm");
-const searchQueryInput = document.getElementById("airportQuery");
-const resultsContainer = document.getElementById("resultsContainer");
-
-const statusMessage = document.getElementById("statusMessage");
-const loadingState = document.getElementById("loadingState");
-const emptyState = document.getElementById("emptyState");
-const noResultsState = document.getElementById("noResultsState");
-const errorState = document.getElementById("errorState");
+let searchForm;
+let searchQueryInput;
+let resultsContainer;
+let statusMessage;
+let loadingState;
+let emptyState;
+let noResultsState;
+let errorState;
 
 // State management
 let debounceTimer = null;
@@ -123,14 +122,32 @@ let currentRenderedResults = null;
 let currentErrorKey = null;
 
 // Initialize
-initAirportSearch();
+onDomReady(initAirportSearch);
+
+function onDomReady(callback) {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", callback, { once: true });
+    return;
+  }
+
+  callback();
+}
 
 /**
  * Initialize airport search functionality
  */
 function initAirportSearch() {
+  searchForm = document.getElementById("airportSearchForm");
+  searchQueryInput = document.getElementById("airportQuery");
+  resultsContainer = document.getElementById("resultsContainer");
+  statusMessage = document.getElementById("statusMessage");
+  loadingState = document.getElementById("loadingState");
+  emptyState = document.getElementById("emptyState");
+  noResultsState = document.getElementById("noResultsState");
+  errorState = document.getElementById("errorState");
+
   if (!searchForm || !searchQueryInput || !resultsContainer) {
-    console.error("Missing required DOM elements for airport search");
+    console.warn("[DecMET Airports] Required DOM elements were not found. Search UI was not initialized.");
     return;
   }
 

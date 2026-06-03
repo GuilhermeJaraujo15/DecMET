@@ -33,31 +33,52 @@ function safeResetStaticMeta() {
   }
 }
 
-const form = document.querySelector("#metarQueryForm");
-const icaoInput = document.querySelector("#icaoInput");
-const submitButton = document.querySelector("#metarSubmitButton");
-const errorMessage = document.querySelector("#errorMessage");
-const rawMetarPlaceholder = document.querySelector("#rawMetarPlaceholder");
-const stationIdValue = document.querySelector("#stationIdValue");
-const obsTimeValue = document.querySelector("#obsTimeValue");
-const sourceValue = document.querySelector("#sourceValue");
-const flightCategoryValue = document.querySelector("#flightCategoryValue");
-const copyMetarButton = document.querySelector("#copyMetarButton");
-
-const statePanels = {
-  empty: document.querySelector("#emptyState"),
-  loading: document.querySelector("#loadingState"),
-  error: document.querySelector("#errorState"),
-  result: document.querySelector("#resultState")
-};
+let form;
+let icaoInput;
+let submitButton;
+let errorMessage;
+let rawMetarPlaceholder;
+let stationIdValue;
+let obsTimeValue;
+let sourceValue;
+let flightCategoryValue;
+let copyMetarButton;
+let statePanels = {};
 
 let currentRawMetar = "";
 let currentErrorKey = null;
 
-initMetarQueryPage();
+onDomReady(initMetarQueryPage);
+
+function onDomReady(callback) {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", callback, { once: true });
+    return;
+  }
+
+  callback();
+}
 
 function initMetarQueryPage() {
+  form = document.querySelector("#metarQueryForm");
+  icaoInput = document.querySelector("#icaoInput");
+  submitButton = document.querySelector("#metarSubmitButton");
+  errorMessage = document.querySelector("#errorMessage");
+  rawMetarPlaceholder = document.querySelector("#rawMetarPlaceholder");
+  stationIdValue = document.querySelector("#stationIdValue");
+  obsTimeValue = document.querySelector("#obsTimeValue");
+  sourceValue = document.querySelector("#sourceValue");
+  flightCategoryValue = document.querySelector("#flightCategoryValue");
+  copyMetarButton = document.querySelector("#copyMetarButton");
+  statePanels = {
+    empty: document.querySelector("#emptyState"),
+    loading: document.querySelector("#loadingState"),
+    error: document.querySelector("#errorState"),
+    result: document.querySelector("#resultState")
+  };
+
   if (!hasRequiredDom()) {
+    console.warn("[DecMET METAR] Required DOM elements were not found. Query UI was not initialized.");
     return;
   }
 

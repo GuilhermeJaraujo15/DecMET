@@ -2,20 +2,24 @@ import { decodeMetar } from "./core/metar-decoder.js";
 import { initMetarKnowledgeTree } from "./ui/metar-knowledge-tree.js";
 import { translateMetarPart } from "./services/metar-translator.js";
 
-initMetarKnowledgeTree();
+function onDomReady(callback) {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", callback, { once: true });
+    return;
+  }
 
-const metarForm = document.querySelector("#metarForm");
-const metarInput = document.querySelector("#metarInput");
-const clearButton = document.querySelector("#clearButton");
+  callback();
+}
 
-const rawPanel = document.querySelector("#rawPanel");
-const rawMetar = document.querySelector("#rawMetar");
-
-const tokensPanel = document.querySelector("#tokensPanel");
-const tokensList = document.querySelector("#tokensList");
-
-const decodedPanel = document.querySelector("#decodedPanel");
-const decodedTableBody = document.querySelector("#decodedTableBody");
+let metarForm;
+let metarInput;
+let clearButton;
+let rawPanel;
+let rawMetar;
+let tokensPanel;
+let tokensList;
+let decodedPanel;
+let decodedTableBody;
 let currentDecodedParts = [];
 
 function t(key) {
@@ -33,17 +37,35 @@ function safeResetStaticMeta() {
   }
 }
 
-const hasDecoderDom = metarForm &&
-  metarInput &&
-  clearButton &&
-  rawPanel &&
-  rawMetar &&
-  tokensPanel &&
-  tokensList &&
-  decodedPanel &&
-  decodedTableBody;
+onDomReady(initPageInteractions);
 
-if (hasDecoderDom) {
+function initPageInteractions() {
+  initMetarKnowledgeTree();
+
+  metarForm = document.querySelector("#metarForm");
+  metarInput = document.querySelector("#metarInput");
+  clearButton = document.querySelector("#clearButton");
+  rawPanel = document.querySelector("#rawPanel");
+  rawMetar = document.querySelector("#rawMetar");
+  tokensPanel = document.querySelector("#tokensPanel");
+  tokensList = document.querySelector("#tokensList");
+  decodedPanel = document.querySelector("#decodedPanel");
+  decodedTableBody = document.querySelector("#decodedTableBody");
+
+  const hasDecoderDom = metarForm &&
+    metarInput &&
+    clearButton &&
+    rawPanel &&
+    rawMetar &&
+    tokensPanel &&
+    tokensList &&
+    decodedPanel &&
+    decodedTableBody;
+
+  if (!hasDecoderDom) {
+    return;
+  }
+
   metarForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
