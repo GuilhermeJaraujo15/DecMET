@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="pt-BR" data-i18n-title="meta.title.decoder">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Decodificar METAR Online e Tradução de METAR | DecMET</title>
+    <meta
+      name="description"
+      content="Traduza METAR para linguagem clara: vento, visibilidade, nuvens, temperatura e pressão. Decodifique relatórios aeronáuticos instantaneamente."
+      data-i18n-description="meta.description.decoder"
+    />
+    <meta
+      name="keywords"
+      content="decodificar METAR online, tradução de METAR, decodificador METAR, interpretar METAR, meteorologia aeronáutica, DecMET"
+    />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://decmet.com.br/pages/decodificador.html"
+    />
+    <meta
+      property="og:title"
+      content="Decodificar METAR Online e Tradução de METAR | DecMET"
+      data-i18n-og-title="meta.title.decoder"
+    />
+    <meta
+      property="og:description"
+      content="Traduza METAR para linguagem clara: vento, visibilidade, nuvens, temperatura e pressão."
+      data-i18n-og-description="meta.description.decoder"
+    />
+    <meta
+      property="og:image"
+      content="https://decmet.com.br/assets/images/airplane-hero.jpg"
+    />
+    <meta
+      property="og:image:alt"
+      content="DecMET - decodificador METAR online em português"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Decodificar METAR Online e Tradução de METAR | DecMET"
+    />
+    <meta
+      name="twitter:description"
+      content="Traduza METAR para linguagem clara: vento, visibilidade, nuvens, temperatura e pressão."
+    />
+    <meta
+      name="twitter:image"
+      content="https://decmet.com.br/assets/images/airplane-hero.jpg"
+    />
+
+    <link
+      rel="canonical"
+      href="https://decmet.com.br/pages/decodificador.html"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "DecMET Decodificador METAR",
+        "applicationCategory": "WeatherApplication",
+        "operatingSystem": "Web",
+        "description": "Decodificador online de METAR que traduz grupos meteorológicos em linguagem clara para aviação.",
+        "url": "https://decmet.com.br/pages/decodificador.html",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "BRL"
+        },
+        "featureList": [
+          "Decodificação automática de METAR",
+          "Identificação de vento, visibilidade, nuvens, temperatura e pressão",
+          "Tradução bilíngue (PT/EN)"
+        ]
+      }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/tailwind-custom.css" />
+    <link rel="icon" type="image/svg+xml" href="/assets/icons/DecMET.svg" />
+  </head>
+  <body>
+    <header class="site-header institutional-hero">
+      <div class="decmet-shell">
+        <div class="hero-copy header-hero-copy">
+          <p
+            class="text-xs font-bold uppercase tracking-wide text-sky-100"
+            data-i18n="decoder.hero.eyebrow"
+          >
+            Ferramenta interceptadora
+          </p>
+          <h1
+            class="mt-2 text-3xl font-bold text-white md:text-4xl"
+            data-i18n="decoder.hero.heading"
+          >
+            Decodificar METAR online
+          </h1>
+          <p
+            class="mt-1 text-base font-semibold text-sky-100"
+            data-i18n="decoder.hero.subtitle"
+          >
+            Cole um reporte METAR bruto e visualize sua interpretação
+          </p>
+          <p
+            class="mt-4 max-w-2xl text-sm leading-relaxed text-slate-100 md:text-base"
+            data-i18n="decoder.hero.body"
+          >
+            Use esta página para transformar grupos meteorológicos em descrições
+            legíveis, facilitando o estudo e a consulta rápida das condições
+            reportadas. Cole o METAR exatamente como recebido, e o sistema
+            separará os componentes técnicos em uma apresentação operacional.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <main class="decmet-shell py-5">
+      <section class="space-y-4">
+        <nav
+          class="portal-nav"
+          aria-label="Navegação principal"
+          data-i18n-aria-label="nav.main"
+        >
+          <a class="portal-nav-link" href="../index.html">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path
+                d="M4 11.4 12 5l8 6.4V20a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"
+              />
+            </svg>
+            <span data-i18n="nav.home">Início</span>
+          </a>
+          <a class="portal-nav-link" href="./sobre-metar.html">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M6 4h9l3 3v13H6z" />
+              <path d="M14 4v4h4M9 12h6M9 16h6" />
+            </svg>
+            <span data-i18n="nav.whatIsMetar">O que é METAR?</span>
+          </a>
+          <a class="portal-nav-link" href="./aerodromo.html">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M12 3 5 21h14z" />
+              <path d="M9 13h6M8 17h8M10 9h4" />
+            </svg>
+            <span data-i18n="nav.airports">Aeródromos</span>
+          </a>
+          <a class="portal-nav-link" href="./apiMet.html">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M4 17h16M6 17l2-8h8l2 8M9 9V6h6v3M8 21h8" />
+            </svg>
+            <span data-i18n="nav.metarQuery">Consulta METAR</span>
+          </a>
+          <a
+            class="portal-nav-link is-active"
+            href="./decodificador.html"
+            aria-current="page"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14" />
+            </svg>
+            <span data-i18n="nav.decoder">Decodificador</span>
+          </a>
+        </nav>
+
+        <article class="metal-panel rounded-2xl p-5">
+          <div
+            class="flex flex-col gap-2 border-b border-slate-300 pb-4 md:flex-row md:items-end md:justify-between"
+          >
+            <div>
+              <p
+                class="text-xs font-bold uppercase tracking-wide text-sky-700"
+                data-i18n="decoder.input.eyebrow"
+              >
+                ENTRADA METAR
+              </p>
+              <h2
+                class="mt-1 text-2xl font-bold text-slate-800 md:text-3xl"
+                data-i18n="decoder.input.heading"
+              >
+                Decodificador operacional
+              </h2>
+            </div>
+            <p
+              class="font-mono text-xs font-bold text-slate-500"
+              data-i18n="decoder.input.form"
+            >
+              FORM-METAR-01
+            </p>
+          </div>
+
+          <form id="metarForm" class="mt-5 space-y-4">
+            <label
+              for="metarInput"
+              class="block text-sm font-bold uppercase text-slate-700"
+              data-i18n="decoder.input.label"
+              >Insira o METAR bruto</label
+            >
+            <textarea
+              id="metarInput"
+              rows="6"
+              class="inset-panel w-full rounded-2xl px-4 py-3 font-mono text-base leading-relaxed text-slate-800 outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
+              placeholder="METAR SBGR 252100Z 09003KT 0500 0200N FG VV002 12/12 Q1016"
+              data-i18n-placeholder="decoder.input.placeholder"
+              aria-label="Código METAR bruto para decodificar"
+            ></textarea>
+            <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <button
+                type="submit"
+                class="glossy-button min-h-12 rounded-xl px-6 py-3 text-sm font-bold"
+                aria-label="Decodificar METAR"
+                data-i18n="decoder.input.decode"
+              >
+                Decodificar
+              </button>
+              <button
+                type="button"
+                id="clearButton"
+                class="glossy-button-secondary min-h-12 rounded-xl px-6 py-3 text-sm font-bold"
+                aria-label="Limpar formulário"
+                data-i18n="decoder.input.clear"
+              >
+                Limpar
+              </button>
+            </div>
+          </form>
+        </article>
+
+        <div class="decoder-grid">
+          <section
+            id="rawPanel"
+            class="classic-widget overflow-hidden rounded-xl"
+            hidden
+          >
+            <h2
+              class="widget-title px-4 py-2 text-sm font-bold uppercase"
+              data-i18n="decoder.raw.title"
+            >
+              METAR RECEBIDO
+            </h2>
+            <div class="p-4">
+              <pre
+                id="rawMetar"
+                class="inset-panel min-h-16 overflow-x-auto rounded-xl px-4 py-3 font-mono text-sm font-bold text-slate-800"
+              ></pre>
+            </div>
+          </section>
+
+          <section
+            id="tokensPanel"
+            class="classic-widget overflow-hidden rounded-xl"
+            hidden
+          >
+            <h2
+              class="widget-title px-4 py-2 text-sm font-bold uppercase"
+              data-i18n="decoder.tokens.title"
+            >
+              PARTES IDENTIFICADAS
+            </h2>
+            <ul id="tokensList" class="flex flex-col gap-2 p-4"></ul>
+          </section>
+        </div>
+
+        <section
+          id="decodedPanel"
+          class="classic-widget overflow-hidden rounded-xl"
+          hidden
+        >
+          <div
+            class="widget-title flex flex-wrap items-center justify-between gap-2 px-4 py-2"
+          >
+            <h2
+              class="text-sm font-bold uppercase"
+              data-i18n="decoder.decoded.title"
+            >
+              METAR DECODIFICADO
+            </h2>
+            <span
+              class="font-mono text-xs text-slate-600"
+              data-i18n="decoder.decoded.table"
+              >Tabela técnica</span
+            >
+          </div>
+          <div class="overflow-x-auto p-3">
+            <table
+              class="w-full min-w-[680px] border-collapse overflow-hidden rounded-xl border border-slate-300 bg-white"
+            >
+              <thead
+                class="bg-gradient-to-b from-white to-slate-200 text-left text-xs uppercase text-slate-700"
+              >
+                <tr>
+                  <th
+                    class="border-b border-slate-300 px-4 py-3"
+                    data-i18n="decoder.table.code"
+                  >
+                    Código
+                  </th>
+                  <th
+                    class="border-b border-slate-300 px-4 py-3"
+                    data-i18n="decoder.table.type"
+                  >
+                    Tipo
+                  </th>
+                  <th
+                    class="border-b border-slate-300 px-4 py-3"
+                    data-i18n="decoder.table.decoding"
+                  >
+                    Decodificação
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="decodedTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="classic-widget overflow-hidden rounded-xl">
+          <div class="widget-title px-4 py-3">
+            <h2
+              class="text-xl font-bold text-slate-800"
+              data-i18n="decoder.howto.title"
+            >
+              Como decodificar METAR online com o DecMET
+            </h2>
+          </div>
+          <div class="grid gap-4 p-4 md:grid-cols-3">
+            <article class="inset-panel p-4">
+              <h3
+                class="text-sm font-bold uppercase text-sky-700"
+                data-i18n="decoder.howto.step1.title"
+              >
+                1. Cole o reporte bruto
+              </h3>
+              <p
+                class="mt-2 text-sm leading-relaxed text-slate-700"
+                data-i18n="decoder.howto.step1.body"
+              >
+                Insira o METAR exatamente como recebido, incluindo o tipo de
+                reporte, código ICAO, horário UTC e os grupos meteorológicos.
+              </p>
+            </article>
+            <article class="inset-panel p-4">
+              <h3
+                class="text-sm font-bold uppercase text-sky-700"
+                data-i18n="decoder.howto.step2.title"
+              >
+                2. Revise cada grupo
+              </h3>
+              <p
+                class="mt-2 text-sm leading-relaxed text-slate-700"
+                data-i18n="decoder.howto.step2.body"
+              >
+                A ferramenta identifica vento, visibilidade, alcance visual de
+                pista, nuvens, temperatura, ponto de orvalho, QNH e tendências.
+              </p>
+            </article>
+            <article class="inset-panel p-4">
+              <h3
+                class="text-sm font-bold uppercase text-sky-700"
+                data-i18n="decoder.howto.step3.title"
+              >
+                3. Compare com a operação
+              </h3>
+              <p
+                class="mt-2 text-sm leading-relaxed text-slate-700"
+                data-i18n="decoder.howto.step3.body"
+              >
+                Use a tradução do METAR para leitura rápida, treinamento e
+                conferência, mantendo a validação final em fontes oficiais.
+              </p>
+            </article>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="../js/i18n.js" defer></script>
+    <script type="module" src="../js/app.js"></script>
+  </body>
+</html>

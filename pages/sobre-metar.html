@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="pt-BR" data-i18n-title="meta.title.about">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>O que é METAR? Guia Completo de Interpretação | DecMET</title>
+    <meta
+      name="description"
+      content="Aprenda a interpretar METAR: vento, visibilidade, fenômenos, nuvens, temperatura e pressão. Exemplos práticos e árvore de conhecimento."
+      data-i18n-description="meta.description.about"
+    />
+    <meta
+      name="keywords"
+      content="o que é METAR, como interpretar METAR, meteorologia aeronáutica, reporte meteorológico aeronáutico, leitura METAR, DecMET"
+    />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://decmet.com.br/pages/sobre-metar.html"
+    />
+    <meta
+      property="og:title"
+      content="O que é METAR? Guia Completo de Interpretação | DecMET"
+      data-i18n-og-title="meta.title.about"
+    />
+    <meta
+      property="og:description"
+      content="Aprenda a interpretar METAR com exemplos práticos. Guia completo para pilotos e entusiastas."
+      data-i18n-og-description="meta.description.about"
+    />
+    <meta
+      property="og:image"
+      content="https://decmet.com.br/assets/images/airplane-hero.jpg"
+    />
+    <meta
+      property="og:image:alt"
+      content="DecMET - guia de interpretação de METAR"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="O que é METAR? Guia Completo de Interpretação | DecMET"
+    />
+    <meta
+      name="twitter:description"
+      content="Aprenda a interpretar METAR com exemplos práticos para aviação."
+    />
+    <meta
+      name="twitter:image"
+      content="https://decmet.com.br/assets/images/airplane-hero.jpg"
+    />
+
+    <link rel="canonical" href="https://decmet.com.br/pages/sobre-metar.html" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "O que é METAR? Guia Completo de Interpretação",
+        "description": "Guia completo para entender e interpretar relatórios METAR na aviação.",
+        "author": {
+          "@type": "Organization",
+          "name": "DecMET"
+        },
+        "educationalLevel": "Beginner",
+        "articleSection": "Meteorologia Aeronáutica"
+      }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/tailwind-custom.css" />
+    <link rel="icon" type="image/svg+xml" href="/assets/icons/DecMET.svg" />
+  </head>
+  <body>
+    <header class="site-header institutional-hero">
+      <div class="decmet-shell">
+        <div class="hero-copy header-hero-copy">
+          <p
+            class="text-xs font-bold uppercase tracking-wide text-sky-100"
+            data-i18n="about.hero.eyebrow"
+          >
+            Guia educacional
+          </p>
+          <h1
+            class="mt-2 text-3xl font-bold text-white md:text-4xl"
+            data-i18n="about.hero.heading"
+          >
+            O que é METAR e como interpretar reportes aeronáuticos
+          </h1>
+          <p
+            class="mt-1 text-base font-semibold text-sky-100"
+            data-i18n="about.hero.subtitle"
+          >
+            Conheça a estrutura dos reportes meteorológicos aeronáuticos
+          </p>
+          <p
+            class="mt-4 max-w-2xl text-sm leading-relaxed text-slate-100 md:text-base"
+            data-i18n="about.hero.body"
+          >
+            Use esta página para compreender os principais grupos de informação
+            presentes em um METAR, como vento, visibilidade, tempo
+            significativo, nuvens, temperatura e pressão. Após entender a
+            estrutura, você estará preparado para usar as ferramentas de
+            consulta e decodificação.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <main class="decmet-shell py-5">
+      <section class="space-y-4">
+        <nav
+          class="portal-nav"
+          aria-label="Navegação principal"
+          data-i18n-aria-label="nav.main"
+        >
+          <a class="portal-nav-link" href="../index.html">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path
+                d="M4 11.4 12 5l8 6.4V20a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"
+              />
+            </svg>
+            <span data-i18n="nav.home">Início</span>
+          </a>
+          <a
+            class="portal-nav-link is-active"
+            href="./sobre-metar.html"
+            aria-current="page"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M6 4h9l3 3v13H6z" />
+              <path d="M14 4v4h4M9 12h6M9 16h6" />
+            </svg>
+            <span data-i18n="nav.whatIsMetar">O que é METAR?</span>
+          </a>
+          <a class="portal-nav-link" href="./aerodromo.html">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M12 3 5 21h14z" />
+              <path d="M9 13h6M8 17h8M10 9h4" />
+            </svg>
+            <span data-i18n="nav.airports">Aeródromos</span>
+          </a>
+          <a class="portal-nav-link" href="./apiMet.html">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M4 17h16M6 17l2-8h8l2 8M9 9V6h6v3M8 21h8" />
+            </svg>
+            <span data-i18n="nav.metarQuery">Consulta METAR</span>
+          </a>
+          <a class="portal-nav-link" href="./decodificador.html">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14" />
+            </svg>
+            <span data-i18n="nav.decoder">Decodificador</span>
+          </a>
+        </nav>
+
+        <article class="metal-panel rounded-2xl p-5 md:p-7">
+          <p
+            class="text-xs font-bold uppercase tracking-wide text-sky-700"
+            data-i18n="about.quick.eyebrow"
+          >
+            REFERÊNCIA RÁPIDA
+          </p>
+          <h2
+            class="mt-2 text-3xl font-bold text-slate-800"
+            data-i18n="about.quick.heading"
+          >
+            O que é METAR?
+          </h2>
+          <p
+            class="mt-4 leading-relaxed text-slate-700"
+            data-i18n="about.quick.body"
+          >
+            METAR é um reporte meteorológico padronizado usado na aviação para
+            informar condições observadas em aeródromos. Ele agrupa dados como
+            vento, visibilidade, tempo presente, nuvens, temperatura, ponto de
+            orvalho e pressão.
+          </p>
+        </article>
+
+        <section class="classic-widget overflow-hidden" data-metar-knowledge>
+          <div class="widget-title px-4 py-3">
+            <p
+              class="text-xs font-bold uppercase tracking-wide text-sky-700"
+              data-i18n="about.tree.eyebrow"
+            >
+              ÁRVORE DE CONHECIMENTO METAR
+            </p>
+            <h2
+              class="mt-1 text-xl font-bold text-slate-800"
+              data-i18n="about.tree.heading"
+            >
+              Entenda cada fatia do reporte meteorológico aeronáutico com este
+              exemplo a seguir:
+            </h2>
+          </div>
+          <div class="space-y-5 p-4 md:p-5">
+            <div class="inset-panel overflow-x-auto px-3 py-4">
+              <div
+                class="flex min-w-max gap-2"
+                aria-label="Exemplo METAR interativo"
+                data-i18n-aria-label="about.tree.exampleLabel"
+              >
+                <button
+                  type="button"
+                  class="metar-token-button metar-mono rounded-lg px-3 py-2 text-sm font-bold"
+                  data-metar-token="METAR"
+                  aria-pressed="false"
+                >
+                  METAR
+                </button>
+                <button
+                  type="button"
+                  class="metar-token-button metar-mono rounded-lg px-3 py-2 text-sm font-bold"
+                  data-metar-token="SBGR"
+                  aria-pressed="false"
+                >
+                  SBGR
+                </button>
+                <button
+                  type="button"
+                  class="metar-token-button metar-mono rounded-lg px-3 py-2 text-sm font-bold"
+                  data-metar-token="252100Z"
+                  aria-pressed="false"
+                >
+                  252100Z
+                </button>
+                <button
+                  type="button"
+                  class="metar-token-button metar-mono rounded-lg px-3 py-2 text-sm font-bold"
+                  data-metar-token="09003KT"
+                  aria-pressed="false"
+                >
+                  09003KT
+                </button>
+                <button
+                  type="button"
+                  class="metar-token-button metar-mono rounded-lg px-3 py-2 text-sm font-bold"
+                  data-metar-token="0500"
+                  aria-pressed="false"
+                >
+                  0500
+                </button>
+                <button
+                  type="button"
+                  class="metar-token-button metar-mono rounded-lg px-3 py-2 text-sm font-bold"
+                  data-metar-token="0200N"
+                  aria-pressed="false"
+                >
+                  0200N
+                </button>
+                <button
+                  type="button"
+                  class="metar-token-button metar-mono rounded-lg px-3 py-2 text-sm font-bold"
+                  data-metar-token="FG"
+                  aria-pressed="false"
+                >
+                  FG
+                </button>
+                <button
+                  type="button"
+                  class="metar-token-button metar-mono rounded-lg px-3 py-2 text-sm font-bold"
+                  data-metar-token="VV002"
+                  aria-pressed="false"
+                >
+                  VV002
+                </button>
+                <button
+                  type="button"
+                  class="metar-token-button metar-mono rounded-lg px-3 py-2 text-sm font-bold"
+                  data-metar-token="12/12"
+                  aria-pressed="false"
+                >
+                  12/12
+                </button>
+                <button
+                  type="button"
+                  class="metar-token-button metar-mono rounded-lg px-3 py-2 text-sm font-bold"
+                  data-metar-token="Q1016"
+                  aria-pressed="false"
+                >
+                  Q1016
+                </button>
+              </div>
+            </div>
+
+            <div class="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+              <article class="knowledge-detail p-4">
+                <p
+                  class="text-xs font-bold uppercase tracking-wide text-sky-700"
+                  data-i18n="about.tree.selected"
+                >
+                  Segmento selecionado
+                </p>
+                <h3
+                  class="metar-mono mt-2 text-2xl font-bold text-slate-800"
+                  data-knowledge-code
+                >
+                  METAR
+                </h3>
+                <p
+                  class="mt-3 text-sm font-bold text-sky-800"
+                  data-knowledge-category
+                >
+                  Tipo de relatório
+                </p>
+                <p
+                  class="mt-2 text-sm leading-relaxed text-slate-700"
+                  data-knowledge-explanation
+                >
+                  Relatório meteorológico regular de aeródromo.
+                </p>
+                <div class="mt-4 border-t border-slate-300 pt-3">
+                  <p
+                    class="text-xs font-bold uppercase text-slate-500"
+                    data-i18n="about.tree.note"
+                  >
+                    Nota técnica
+                  </p>
+                  <p
+                    class="mt-1 text-sm leading-relaxed text-slate-600"
+                    data-knowledge-note
+                  >
+                    Indica que o reporte segue o formato padronizado METAR.
+                  </p>
+                </div>
+              </article>
+
+              <article class="knowledge-detail p-4">
+                <p
+                  class="text-xs font-bold uppercase tracking-wide text-sky-700"
+                  data-i18n="about.tree.grouped"
+                >
+                  Árvore agrupada
+                </p>
+                <div class="mt-3 space-y-3 text-sm text-slate-700">
+                  <div class="knowledge-tree-node p-3">
+                    <span
+                      class="font-bold text-sky-800"
+                      data-i18n="about.tree.identification"
+                      >Identificação</span
+                    >
+                    <p class="metar-mono mt-1 text-xs">
+                      METAR · SBGR · 252100Z
+                    </p>
+                  </div>
+                  <div class="knowledge-tree-node p-3">
+                    <span
+                      class="font-bold text-sky-800"
+                      data-i18n="about.tree.wind"
+                      >Condições de vento</span
+                    >
+                    <p class="metar-mono mt-1 text-xs">09003KT</p>
+                  </div>
+                  <div class="knowledge-tree-node p-3">
+                    <span
+                      class="font-bold text-sky-800"
+                      data-i18n="about.tree.visibility"
+                      >Visibilidade</span
+                    >
+                    <p class="metar-mono mt-1 text-xs">0500 · 0200N</p>
+                  </div>
+                  <div class="knowledge-tree-node p-3">
+                    <span
+                      class="font-bold text-sky-800"
+                      data-i18n="about.tree.weather"
+                      >Tempo presente</span
+                    >
+                    <p class="metar-mono mt-1 text-xs">FG</p>
+                  </div>
+                  <div class="knowledge-tree-node p-3">
+                    <span
+                      class="font-bold text-sky-800"
+                      data-i18n="about.tree.clouds"
+                      >Nuvens / visibilidade vertical</span
+                    >
+                    <p class="metar-mono mt-1 text-xs">VV002</p>
+                  </div>
+                  <div class="knowledge-tree-node p-3">
+                    <span
+                      class="font-bold text-sky-800"
+                      data-i18n="about.tree.temperaturePressure"
+                      >Temperatura e pressão</span
+                    >
+                    <p class="metar-mono mt-1 text-xs">12/12 · Q1016</p>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="classic-widget overflow-hidden">
+          <div class="widget-title px-4 py-3">
+            <h2
+              class="text-xl font-bold text-slate-800"
+              data-i18n="about.practice.title"
+            >
+              Como interpretar um METAR na prática
+            </h2>
+          </div>
+          <div class="grid gap-4 p-4 md:grid-cols-2">
+            <article class="inset-panel p-4">
+              <h3
+                class="text-sm font-bold uppercase text-sky-700"
+                data-i18n="about.practice.readByGroups.title"
+              >
+                Leia por grupos, não por palavras soltas
+              </h3>
+              <p
+                class="mt-2 text-sm leading-relaxed text-slate-700"
+                data-i18n="about.practice.readByGroups.body"
+              >
+                Um METAR é organizado em blocos padronizados. Identifique
+                primeiro a estação ICAO, depois data e hora, vento,
+                visibilidade, fenômenos meteorológicos, nuvens, temperatura,
+                ponto de orvalho e pressão.
+              </p>
+            </article>
+            <article class="inset-panel p-4">
+              <h3
+                class="text-sm font-bold uppercase text-sky-700"
+                data-i18n="about.practice.observe.title"
+              >
+                Observe os elementos que afetam a operação
+              </h3>
+              <p
+                class="mt-2 text-sm leading-relaxed text-slate-700"
+                data-i18n="about.practice.observe.body"
+              >
+                Vento forte ou com rajadas, visibilidade reduzida, nevoeiro,
+                trovoada, teto baixo e variação de pressão são sinais
+                importantes para a leitura aeronáutica do tempo observado.
+              </p>
+            </article>
+            <article class="inset-panel p-4 md:col-span-2">
+              <h3
+                class="text-sm font-bold uppercase text-sky-700"
+                data-i18n="about.practice.useDecMET.title"
+              >
+                Use o DecMET como apoio de estudo
+              </h3>
+              <p
+                class="mt-2 text-sm leading-relaxed text-slate-700"
+                data-i18n="about.practice.useDecMET.body"
+              >
+                Depois de entender a estrutura, utilize a consulta METAR para
+                obter um reporte recente e o decodificador para comparar o
+                código bruto com a interpretação em linguagem direta. Para
+                operações reais, confirme sempre as informações em fontes
+                oficiais.
+              </p>
+            </article>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="../js/i18n.js" defer></script>
+    <script type="module" src="../js/app.js"></script>
+  </body>
+</html>

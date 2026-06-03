@@ -1,0 +1,68 @@
+.decmet-shell {
+  width: min(1040px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.decmet-grid {
+  display: grid;
+  grid-template-columns: minmax(200px, 240px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.decoder-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
+  gap: 16px;
+}
+
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+/* Make single module items span full width so lone cards match above widgets */
+.module-grid > article,
+.module-grid > section {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 960px) {
+
+  .decmet-grid,
+  .decoder-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .module-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .decmet-shell {
+    width: min(100% - 18px, 1040px);
+  }
+}
+
+/* Center METAR token buttons in the knowledge widget on desktop only */
+@media (min-width: 961px) {
+  .classic-widget[data-metar-knowledge] .inset-panel {
+    text-align: center;
+  }
+  .classic-widget[data-metar-knowledge] .inset-panel > .flex {
+    display: inline-flex;
+    justify-content: center;
+  }
+}
+
+/* Move 'Demonstração' badge slightly higher and add spacing to the right-aligned tag */
+.module-grid .classic-widget > .absolute.top-2.right-2 {
+  right: 1.25rem;
+  top: 0.25rem; /* raise the badge */
+}
+
+.module-grid .classic-widget .flex.flex-wrap.items-center > span.ml-auto {
+  margin-top: 0.6rem; /* lower the right-aligned tag for separation */
+}

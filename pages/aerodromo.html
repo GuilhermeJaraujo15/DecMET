@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="pt-BR" data-i18n-title="meta.title.aerodromo">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buscar Código ICAO e Informações de Aeródromos | DecMET</title>
+    <meta
+      name="description"
+      content="Encontre o código ICAO de qualquer aeroporto ou aeródromo. Consulte nome, cidade, país, IATA e coordenadas para suas consultas METAR."
+      data-i18n-description="meta.description.aerodromo"
+    />
+    <meta
+      name="keywords"
+      content="buscar código ICAO, informações de aeródromos, consulta aeródromo, aeroporto ICAO, código IATA, meteorologia aeronáutica, DecMET"
+    />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://decmet.com.br/pages/aerodromo.html"
+    />
+    <meta
+      property="og:title"
+      content="Buscar Código ICAO e Informações de Aeródromos | DecMET"
+      data-i18n-og-title="meta.title.aerodromo"
+    />
+    <meta
+      property="og:description"
+      content="Encontre o código ICAO de qualquer aeroporto ou aeródromo para suas consultas METAR."
+      data-i18n-og-description="meta.description.aerodromo"
+    />
+    <meta
+      property="og:image"
+      content="https://decmet.com.br/assets/images/airplane-hero.jpg"
+    />
+    <meta
+      property="og:image:alt"
+      content="DecMET - busca de código ICAO e informações de aeródromos"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Buscar Código ICAO e Informações de Aeródromos | DecMET"
+    />
+    <meta
+      name="twitter:description"
+      content="Encontre o código ICAO de aeroportos e aeródromos para consultas METAR."
+    />
+    <meta
+      name="twitter:image"
+      content="https://decmet.com.br/assets/images/airplane-hero.jpg"
+    />
+
+    <link rel="canonical" href="https://decmet.com.br/pages/aerodromo.html" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Dataset",
+        "name": "Aeródromos e Códigos ICAO",
+        "description": "Base de dados de aeródromos com códigos ICAO, IATA, localização, coordenadas e altitude.",
+        "url": "https://decmet.com.br/pages/aerodromo.html",
+        "keywords": "ICAO, IATA, aeródromo, aeroporto, heliponto",
+        "inLanguage": ["pt-BR", "en-US"]
+      }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/tailwind-custom.css" />
+    <link rel="icon" type="image/svg+xml" href="/assets/icons/DecMET.svg" />
+  </head>
+  <body>
+    <header class="site-header institutional-hero">
+      <div class="decmet-shell">
+        <div class="hero-copy header-hero-copy">
+          <p
+            class="text-xs font-bold uppercase tracking-wide text-sky-100"
+            data-i18n="airports.hero.eyebrow"
+          >
+            Consulta de dados de aeródromos
+          </p>
+          <h1
+            class="mt-2 text-3xl font-bold text-white md:text-4xl"
+            data-i18n="airports.hero.heading"
+          >
+            Buscar código ICAO e informações de aeródromos
+          </h1>
+          <p
+            class="mt-1 text-base font-semibold text-sky-100"
+            data-i18n="airports.hero.subtitle"
+          >
+            Pesquise aeródromos, aeroportos e helipontos
+          </p>
+          <p
+            class="mt-4 max-w-2xl text-sm leading-relaxed text-slate-100 md:text-base"
+            data-i18n="airports.hero.body"
+          >
+            Digite nome, cidade, país, código ICAO ou IATA para encontrar o
+            aeródromo desejado. O código ICAO é o identificador usado nas
+            consultas meteorológicas. Localize o código certo antes de consultar
+            o METAR.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <main class="decmet-shell py-5">
+      <nav
+        class="portal-nav"
+        aria-label="Navegação principal"
+        data-i18n-aria-label="nav.main"
+      >
+        <a class="portal-nav-link" href="../index.html">
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path
+              d="M4 11.4 12 5l8 6.4V20a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"
+            />
+          </svg>
+          <span data-i18n="nav.home">Início</span>
+        </a>
+        <a class="portal-nav-link" href="./sobre-metar.html">
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M6 4h9l3 3v13H6z" />
+            <path d="M14 4v4h4M9 12h6M9 16h6" />
+          </svg>
+          <span data-i18n="nav.whatIsMetar">O que é METAR?</span>
+        </a>
+        <a
+          class="portal-nav-link is-active"
+          href="./aerodromo.html"
+          aria-current="page"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M12 3 5 21h14z" />
+            <path d="M9 13h6M8 17h8M10 9h4" />
+          </svg>
+          <span data-i18n="nav.airports">Aeródromos</span>
+        </a>
+        <a class="portal-nav-link" href="./apiMet.html">
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M4 17h16M6 17l2-8h8l2 8M9 9V6h6v3M8 21h8" />
+          </svg>
+          <span data-i18n="nav.metarQuery">Consulta METAR</span>
+        </a>
+        <a class="portal-nav-link" href="./decodificador.html">
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14" />
+          </svg>
+          <span data-i18n="nav.decoder">Decodificador</span>
+        </a>
+      </nav>
+
+      <div class="decmet-grid airport-page-grid mt-5">
+        <aside class="airport-search-column space-y-4">
+          <section class="classic-widget airport-search-panel rounded-xl">
+            <h2
+              class="widget-title px-4 py-2 text-sm font-bold uppercase"
+              data-i18n="airports.search.title"
+            >
+              Pesquisar
+            </h2>
+            <form id="airportSearchForm" class="space-y-3 p-4">
+              <div>
+                <label
+                  for="airportQuery"
+                  class="block text-xs font-bold uppercase text-slate-600 mb-2"
+                  data-i18n="airports.search.label"
+                  >Termo de busca</label
+                >
+                <div class="airport-search-wrapper">
+                  <input
+                    id="airportQuery"
+                    type="text"
+                    class="inset-panel w-full rounded-xl px-3 py-2 text-sm outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100"
+                    placeholder="Digite o nome do aeroporto, cidade, país, IATA ou código ICAO"
+                    data-i18n-placeholder="airports.search.placeholder"
+                    autocomplete="off"
+                    aria-label="Campo de busca de aeródromos"
+                  />
+                </div>
+              </div>
+              <button
+                type="submit"
+                id="searchBtn"
+                class="glossy-button w-full rounded-xl px-4 py-2 text-sm font-bold"
+                aria-label="Buscar aeródromo"
+              >
+                <span data-i18n="airports.search.button">Buscar aeródromo</span>
+              </button>
+            </form>
+          </section>
+        </aside>
+
+        <section class="space-y-4">
+          <article class="metal-panel rounded-2xl p-5 md:p-7">
+            <p
+              class="text-xs font-bold uppercase tracking-wide text-sky-700"
+              data-i18n="airports.panel.eyebrow"
+            >
+              Consulta de aeródromos
+            </p>
+            <h2
+              class="mt-2 text-3xl font-bold text-slate-800"
+              data-i18n="airports.panel.heading"
+            >
+              Localize o código ICAO de aeroportos e aeródromos
+            </h2>
+            <p
+              class="mt-4 leading-relaxed text-slate-700 text-sm md:text-base"
+              data-i18n="airports.panel.body"
+            >
+              Use esta seção para encontrar o código ICAO necessário para
+              futuras consultas METAR no DecMET. A base de aeródromos será
+              estruturada a partir dos dados da OurAirports e consultada por
+              meio do banco do próprio sistema.
+            </p>
+          </article>
+
+          <div id="statusMessage" class="hidden" aria-live="polite">
+            <div
+              id="loadingState"
+              class="classic-widget rounded-xl p-5 text-center text-slate-600 hidden"
+            >
+              <span class="inline-block animate-spin mr-2">&nbsp;</span
+              ><span data-i18n="airports.state.loading"
+                >Buscando aeródromos...</span
+              >
+            </div>
+            <div
+              id="emptyState"
+              class="classic-widget rounded-xl p-5 text-center text-slate-600 hidden"
+            >
+              <span data-i18n="airports.state.empty"
+                >Digite um termo para iniciar a busca.</span
+              >
+            </div>
+            <div
+              id="noResultsState"
+              class="classic-widget rounded-xl p-5 text-center text-slate-600 hidden"
+            >
+              <span data-i18n="airports.state.noResults"
+                >Nenhum aeródromo encontrado para essa pesquisa.</span
+              >
+            </div>
+            <div
+              id="errorState"
+              class="classic-widget rounded-xl p-5 text-center text-red-600 font-semibold hidden"
+            >
+              <span data-i18n="airports.state.error"
+                >Não foi possível consultar a base de aeródromos no
+                momento.</span
+              >
+            </div>
+          </div>
+
+          <div id="resultsContainer" class="module-grid">
+            <article
+              class="classic-widget rounded-xl p-5 border-l-4 border-l-sky-500 shadow-sm relative opacity-75"
+            >
+              <div
+                class="absolute top-2 right-2 rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-800 uppercase tracking-wide border border-amber-200"
+              >
+                <span data-i18n="airports.demo">Demonstração</span>
+              </div>
+              <div
+                class="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-3"
+              >
+                <div class="flex items-center gap-2">
+                  <span
+                    class="font-mono text-xl font-bold text-sky-800 tracking-wider"
+                    >SBGR</span
+                  >
+                  <span
+                    class="rounded bg-sky-100 px-2 py-0.5 font-mono text-xs font-bold text-sky-800"
+                    >IATA: GRU</span
+                  >
+                </div>
+                <span
+                  class="rounded-full bg-slate-200 px-2.5 py-0.5 text-xs font-semibold text-slate-700 uppercase tracking-wide ml-auto"
+                >
+                  <span data-i18n="airports.type.airplane"
+                    >Aeródromo de avião</span
+                  >
+                </span>
+              </div>
+              <div class="mt-3">
+                <h3 class="text-base font-bold text-slate-800">
+                  São Paulo/Guarulhos International Airport
+                </h3>
+                <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 text-sm">
+                  <div>
+                    <p
+                      class="text-xs font-semibold uppercase tracking-wider text-slate-400"
+                      data-i18n="airports.label.location"
+                    >
+                      Localização
+                    </p>
+                    <p class="mt-0.5 text-slate-700 font-medium">
+                      Guarulhos, São Paulo — Brazil
+                    </p>
+                  </div>
+                  <div>
+                    <p
+                      class="text-xs font-semibold uppercase tracking-wider text-slate-400"
+                      data-i18n="airports.label.coordinatesAltitude"
+                    >
+                      Coordenadas & Altitude
+                    </p>
+                    <p class="mt-0.5 text-slate-700 font-mono">
+                      -23.4356, -46.4731 / 2459 ft
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <section class="classic-widget overflow-hidden rounded-xl">
+            <div class="widget-title px-4 py-3">
+              <h2
+                class="text-xl font-bold text-slate-800"
+                data-i18n="airports.howto.title"
+              >
+                Como buscar código ICAO de aeródromos
+              </h2>
+            </div>
+            <div class="grid gap-4 p-4 md:grid-cols-2">
+              <article class="inset-panel p-4">
+                <h3
+                  class="text-sm font-bold uppercase text-sky-700"
+                  data-i18n="airports.howto.search.title"
+                >
+                  Pesquise por nome, cidade, ICAO ou IATA
+                </h3>
+                <p
+                  class="mt-2 text-sm leading-relaxed text-slate-700"
+                  data-i18n="airports.howto.search.body"
+                >
+                  A busca aceita diferentes termos para localizar aeroportos,
+                  helipontos e aeródromos. O código ICAO de quatro letras é o
+                  identificador usado para consultar METAR.
+                </p>
+              </article>
+              <article class="inset-panel p-4">
+                <h3
+                  class="text-sm font-bold uppercase text-sky-700"
+                  data-i18n="airports.howto.confirm.title"
+                >
+                  Confirme o aeródromo antes da consulta
+                </h3>
+                <p
+                  class="mt-2 text-sm leading-relaxed text-slate-700"
+                  data-i18n="airports.howto.confirm.body"
+                >
+                  Muitos aeródromos possuem nomes parecidos ou códigos
+                  regionais. Verifique localização, país, IATA e coordenadas
+                  antes de usar o ICAO na consulta METAR.
+                </p>
+              </article>
+            </div>
+          </section>
+        </section>
+      </div>
+    </main>
+
+    <script src="../js/i18n.js" defer></script>
+    <script type="module" src="../js/aerodromo.js"></script>
+  </body>
+</html>
