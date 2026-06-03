@@ -157,6 +157,9 @@ app.use("/css", express.static(path.join(projectRoot, "css")));
 app.use("/js", express.static(path.join(projectRoot, "js")));
 app.use("/assets", express.static(path.join(projectRoot, "assets")));
 
+app.get(["/", "/index.html"], (req, res) => {
+  res.sendFile(path.join(projectRoot, "index.html"));
+});
 
 app.get(["/about-metar.html", "/pages/about-metar.html"], (req, res) => {
   res.sendFile(path.join(projectRoot, "pages", "sobre-metar.html"));
@@ -192,9 +195,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.get(["/", "/index.html"], (req, res) => {
-  res.sendFile(path.join(projectRoot, "index.html"));
-});
 
 // Start server
 app.listen(PORT, "0.0.0.0", () => {
