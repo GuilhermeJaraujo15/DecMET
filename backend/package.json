@@ -5,14 +5,25 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev": "node server.js",
+    "build:css": "tailwindcss -c tailwind.config.cjs -i ../css/tailwind-input.css -o ../css/tailwind.css --minify",
+    "build:sitemap": "node scripts/generate-sitemap.js",
+    "build": "npm run build:css",
+    "dev": "concurrently \"tailwindcss -c tailwind.config.cjs -i ../css/tailwind-input.css -o ../css/tailwind.css --watch\" \"node server.js\"",
     "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.18.2",
     "mysql2": "^3.6.5",
     "cors": "^2.8.5",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.10",
+    "node-cache": "^5.1.2"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.1",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17"
   },
 
   "engines": {

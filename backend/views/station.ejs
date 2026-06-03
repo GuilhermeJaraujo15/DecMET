@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="<%= lang %>">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %></title>
+  <meta name="description" content="<%= description %>">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
+  <link rel="canonical" href="<%= canonicalUrl %>">
+  <% hreflangs.forEach(item => { %>
+    <link rel="alternate" hreflang="<%= item.lang %>" href="<%= item.url %>">
+  <% }) %>
+  <link rel="alternate" hreflang="x-default" href="<%= xDefaultUrl %>">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="<%= title %>">
+  <meta property="og:description" content="<%= description %>">
+  <meta property="og:url" content="<%= canonicalUrl %>">
+  <meta property="og:site_name" content="DecMET">
+  <link rel="stylesheet" href="/css/tailwind.css">
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/tailwind-custom.css">
+  <script type="application/ld+json"><%- JSON.stringify(structuredData) %></script>
+</head>
+<body class="bg-slate-100 text-slate-900">
+  <header class="border-b border-slate-300 bg-white">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+      <a class="text-lg font-extrabold text-sky-900" href="/">DecMET</a>
+      <nav class="flex gap-4 text-sm font-semibold text-slate-700" aria-label="SEO navigation">
+        <a href="/"><%= t("common.home") %></a>
+        <a href="/pages/aerodromo.html"><%= t("common.airports") %></a>
+        <a href="/pages/decodificador.html"><%= t("common.decoder") %></a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-4 py-8">
+    <p class="text-xs font-bold uppercase tracking-wide text-sky-700"><%= t("station.eyebrow") %></p>
+    <h1 class="mt-2 text-3xl font-extrabold text-slate-950 md:text-4xl">
+      METAR <%= icao %> - <%= airport.name %>
+    </h1>
+    <p class="mt-3 max-w-3xl text-base leading-relaxed text-slate-700"><%= description %></p>
+
+    <div class="mt-8 grid gap-5 lg:grid-cols-[1.4fr_0.8fr]">
+      <section class="rounded border border-slate-300 bg-white p-5 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h2 class="text-xl font-bold text-slate-950"><%= t("station.metar.heading") %></h2>
+          <% if (metarCache) { %>
+            <span class="rounded border border-sky-200 bg-sky-50 px-2 py-1 text-xs font-semibold text-sky-800">
+              <%= t("station.cache.label") %>: <%= metarCache.status %>
+            </span>
+          <% } %>
+        </div>
+
+        <% if (metar) { %>
+          <h3 class="mt-5 text-sm font-bold uppercase tracking-wide text-slate-600"><%= t("station.metar.raw") %></h3>
+          <pre class="mt-2 overflow-x-auto rounded bg-slate-950 p-4 text-sm leading-relaxed text-slate-50"><%= metar.rawMetar %></pre>
+
+          <% if (metar.reportTime || metar.flightCategory) { %>
+            <dl class="mt-4 grid gap-3 text-sm md:grid-cols-2">
+              <% if (metar.reportTime) { %>
+                <div>
+                  <dt class="font-bold text-slate-600">UTC</dt>
+                  <dd class="text-slate-900"><%= metar.reportTime %></dd>
+                </div>
+              <% } %>
+              <% if (metar.flightCategory) { %>
+                <div>
+                  <dt class="font-bold text-slate-600">Flight category</dt>
+                  <dd class="text-slate-900"><%= metar.flightCategory %></dd>
+                </div>
+              <% } %>
+            </dl>
+          <% } %>
+
+          <% if (decoded?.decodedParts?.length) { %>
+            <h3 class="mt-7 text-sm font-bold uppercase tracking-wide text-slate-600"><%= t("station.metar.decoded") %></h3>
+            <div class="mt-3 grid gap-3">
+              <% decoded.decodedParts.forEach(part => { %>
+                <article class="rounded border border-slate-200 bg-slate-50 p-4">
+                  <p class="font-mono text-sm font-bold text-sky-800"><%= part.code %></p>
+                  <p class="mt-1 text-sm font-semibold text-slate-800"><%= part.type %></p>
+                  <p class="mt-1 text-sm leading-relaxed text-slate-700"><%= part.description %></p>
+                </article>
+              <% }) %>
+            </div>
+          <% } %>
+        <% } else { %>
+          <p class="mt-5 rounded border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+            <%= t("station.metar.unavailable") %>
+          </p>
+        <% } %>
+      </section>
+
+      <aside class="rounded border border-slate-300 bg-white p-5 shadow-sm">
+        <h2 class="text-xl font-bold text-slate-950"><%= t("station.airport.heading") %></h2>
+        <dl class="mt-5 space-y-4 text-sm">
+          <div>
+            <dt class="font-bold text-slate-600">ICAO</dt>
+            <dd class="text-slate-900"><%= icao %></dd>
+          </div>
+          <div>
+            <dt class="font-bold text-slate-600"><%= t("station.airport.location") %></dt>
+            <dd class="text-slate-900"><%= [airport.municipality, airport.iso_region, airport.iso_country].filter(Boolean).join(", ") || "-" %></dd>
+          </div>
+          <div>
+            <dt class="font-bold text-slate-600"><%= t("station.airport.type") %></dt>
+            <dd class="text-slate-900"><%= airport.type || "-" %></dd>
+          </div>
+          <% if (airport.latitude_deg !== null && airport.longitude_deg !== null) { %>
+            <div>
+              <dt class="font-bold text-slate-600"><%= t("station.airport.coordinates") %></dt>
+              <dd class="text-slate-900"><%= airport.latitude_deg %>, <%= airport.longitude_deg %></dd>
+            </div>
+          <% } %>
+          <% if (airport.elevation_ft !== null) { %>
+            <div>
+              <dt class="font-bold text-slate-600"><%= t("station.airport.elevation") %></dt>
+              <dd class="text-slate-900"><%= airport.elevation_ft %> ft</dd>
+            </div>
+          <% } %>
+        </dl>
+      </aside>
+    </div>
+
+    <p class="mt-8 text-sm text-slate-600"><%= t("station.footer.note") %></p>
+  </main>
+</body>
+</html>
