@@ -28,12 +28,15 @@ ${urls.join("\n")}
 }
 
 function buildUrlEntry(loc) {
+  const now = new Date().toISOString().split('T')[0]; // Gera data YYYY-MM-DD
   return `  <url>
     <loc>${escapeXml(loc)}</loc>
+    <lastmod>${now}</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.8</priority>
   </url>`;
 }
+
 
 function getPublicBaseUrl() {
   return String(process.env.PUBLIC_BASE_URL || "https://decmet.com.br").replace(/\/+$/, "");
