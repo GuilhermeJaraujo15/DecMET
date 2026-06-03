@@ -10,7 +10,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import aeroportosRoutes from "./src/routes/aeroportos.routes.js";
 import metarRoutes from "./src/routes/metar.routes.js";
-import { getAirportByIcao, isValidIcao, normalizeIcao } from "./src/services/airportSeo.service.js";
+import { getSeoAirportByIcao, isValidIcao, normalizeIcao } from "./src/services/airportSeo.service.js";
 import { getMetarSwr } from "./src/services/metarSwrCache.service.js";
 import { buildSitemapXml } from "./src/services/sitemap.service.js";
 import { defaultLang, isSupportedLang, normalizeLang, supportedLangs, t } from "./src/i18n/index.js";
@@ -41,8 +41,11 @@ app.set("views", path.join(__dirname, "views"));
 
 app.get("/sitemap.xml", async (req, res, next) => {
   try {
-    const xml = await buildSitemapXml(); // Ou res.sendFile se for o estático
-    res.type("application/xml").send(xml);
+    const xml = await buildSitemapXml();
+    res
+      .type("application/xml; charset=utf-8")
+      .set("Cache-Control", "public, max-age=3600, s-maxage=21600")
+      .send(xml);
   } catch (error) {
     next(error);
   }
@@ -91,7 +94,7 @@ app.get("/:lang/estacao/:icao", async (req, res, next) => {
     }
 
     const [airport, metarResult] = await Promise.all([
-      getAirportByIcao(icao),
+      getSeoAirportByIcao(icao),
       getMetarForSeo(icao)
     ]);
 
@@ -139,7 +142,7 @@ app.get("/:lang/estacao/:icao", async (req, res, next) => {
 app.get("/robots.txt", (req, res) => {
   const baseUrl = getPublicBaseUrl();
 
-  res.type("text/plain").send([
+  res.type("text/plain; charset=utf-8").send([
     "User-agent: *",
     "Allow: /",
     `Sitemap: ${baseUrl}/sitemap.xml`
