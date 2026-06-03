@@ -56,6 +56,16 @@ app.use(cors({
 
 app.use(express.json());
 
+app.get("/sitemap.xml", async (req, res, next) => {
+  try {
+    const xml = await buildSitemapXml(); // Ou res.sendFile se for o estático
+    res.type("application/xml").send(xml);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
 // Health check endpoint
 app.get("/health", (req, res) => {
   res.json({ status: "ok", message: "DecMET backend is running" });
@@ -137,15 +147,6 @@ app.get("/robots.txt", (req, res) => {
 });
 
 // Routes
-
-app.get("/sitemap.xml", async (req, res, next) => {
-  try {
-    const xml = await buildSitemapXml(); // Ou res.sendFile se for o estático
-    res.type("application/xml").send(xml);
-  } catch (error) {
-    next(error);
-  }
-});
 
 app.use("/api/aeroportos", aeroportosRoutes);
 app.use("/api/metar", metarRoutes);
