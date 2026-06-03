@@ -126,15 +126,6 @@ app.get("/:lang/estacao/:icao", async (req, res, next) => {
   }
 });
 
-app.get("/sitemap.xml", async (req, res, next) => {
-  try {
-    const xml = await buildSitemapXml();
-    res.type("application/xml").send(xml);
-  } catch (error) {
-    next(error);
-  }
-});
-
 app.get("/robots.txt", (req, res) => {
   const baseUrl = getPublicBaseUrl();
 
@@ -146,6 +137,16 @@ app.get("/robots.txt", (req, res) => {
 });
 
 // Routes
+
+app.get("/sitemap.xml", async (req, res, next) => {
+  try {
+    const xml = await buildSitemapXml(); // Ou res.sendFile se for o estático
+    res.type("application/xml").send(xml);
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.use("/api/aeroportos", aeroportosRoutes);
 app.use("/api/metar", metarRoutes);
 
