@@ -39,6 +39,15 @@ const allowedOrigins = [...new Set([...defaultFrontendOrigins, ...configuredFron
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+app.get("/sitemap.xml", async (req, res, next) => {
+  try {
+    const xml = await buildSitemapXml(); // Ou res.sendFile se for o estático
+    res.type("application/xml").send(xml);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Middleware
 app.use(cors({
   origin(origin, callback) {
@@ -55,15 +64,6 @@ app.use(cors({
 }));
 
 app.use(express.json());
-
-app.get("/sitemap.xml", async (req, res, next) => {
-  try {
-    const xml = await buildSitemapXml(); // Ou res.sendFile se for o estático
-    res.type("application/xml").send(xml);
-  } catch (error) {
-    next(error);
-  }
-});
 
 
 // Health check endpoint
@@ -157,9 +157,6 @@ app.use("/css", express.static(path.join(projectRoot, "css")));
 app.use("/js", express.static(path.join(projectRoot, "js")));
 app.use("/assets", express.static(path.join(projectRoot, "assets")));
 
-app.get(["/", "/index.html"], (req, res) => {
-  res.sendFile(path.join(projectRoot, "index.html"));
-});
 
 app.get(["/about-metar.html", "/pages/about-metar.html"], (req, res) => {
   res.sendFile(path.join(projectRoot, "pages", "sobre-metar.html"));
@@ -193,6 +190,10 @@ app.use((err, req, res, next) => {
     error: "Internal server error",
     message: process.env.NODE_ENV === "development" ? err.message : undefined
   });
+});
+
+app.get(["/", "/index.html"], (req, res) => {
+  res.sendFile(path.join(projectRoot, "index.html"));
 });
 
 // Start server
