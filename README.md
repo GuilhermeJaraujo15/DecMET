@@ -1,1 +1,3 @@
-https://guilhermejaraujo15.github.io/DecMeT/
+O DecMET é um Sistema que pode ser usado tanto por estudantes da área da Aviação, como por entusiastas. Com ele, você pode consultar o último METAR de aeródromo desejado através da API NOAA (National Oceanic And Atmospheric Administration) em tempo real. Para ter a API NOAA localizar o último METAR, ela somente precisa receber o código de quatro dígitos chamado "ICAO", que pode ser encontrado através de uma busca no Banco de Dados na Nuvem da Aiven. Após ter o acesso ao último METAR, basta colar na sessão do Decodificador, que o próprio Sistema dará a saída do METAR debulhado para rápida análise das condições meteorológicas local do aeródromo em análise.
+
+Veja-o aqui > decmet.com.br
