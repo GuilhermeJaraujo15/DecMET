@@ -708,3 +708,55 @@ main .inset-panel {
     white-space: nowrap;
   }
 }
+
+/* ============================================================================
+   Thumb bar (portal-nav) compacta para telas largas (≥ 1340px)
+   ============================================================================ */
+@media (min-width: 1340px) {
+  .portal-nav {
+    position: fixed;
+    right: max(1.5rem, env(safe-area-inset-right));
+    bottom: max(1.5rem, env(safe-area-inset-bottom));
+    left: max(1.5rem, env(safe-area-inset-left));
+    z-index: 2000;
+    grid-template-columns: repeat(5, minmax(0, auto));
+    gap: 0.5rem;          /* menos espaçamento entre botões */
+    max-width: 26rem;     /* largura máxima reduzida */
+    margin-inline: auto;
+    padding: 0.45rem 0.55rem;
+    border-radius: 1rem;
+    background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(232,241,248,0.96) 54%, rgba(188,207,222,0.98) 100%);
+    box-shadow: 0 12px 28px rgba(18, 39, 56, 0.25), inset 0 1px 0 rgba(255,255,255,0.98);
+    backdrop-filter: blur(12px);
+  }
+
+  .portal-nav-link {
+    aspect-ratio: 1;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-height: 2.8rem;
+    min-width: 3rem;
+    padding: 0.4rem 0.2rem;
+    border-radius: 0.85rem;
+    font-size: 0;         /* esconde texto puro, usamos span */
+  }
+
+  .portal-nav-link svg {
+    width: 1.35rem;       /* ícone um pouco menor */
+    height: 1.35rem;
+  }
+
+  .portal-nav-link span {
+    font-size: 0.6rem;    /* texto menor */
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 5.5rem;
+  }
+
+  .portal-nav-link.is-active {
+    transform: translateY(-0.15rem);
+    box-shadow: 0 6px 14px rgba(47, 84, 111, 0.25), inset 0 2px 5px rgba(55, 86, 110, 0.2);
+  }
+}
