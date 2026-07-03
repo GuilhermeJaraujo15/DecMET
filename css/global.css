@@ -1,0 +1,446 @@
+* {
+  box-sizing: border-box;
+}
+
+/* Bloqueia o flicker apenas quando a classe de preparação está ativa */
+.i18n-preparing body {
+  visibility: hidden !important;
+  opacity: 0;
+  transition: opacity 0.2s ease-in;
+}
+
+/* Quando a classe é removida, o site aparece suavemente */
+html:not(.i18n-preparing) body {
+  visibility: visible;
+  opacity: 1;
+}
+
+html {
+  min-width: 320px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+textarea {
+  resize: vertical;
+}
+
+::selection {
+  color: #0b2e45;
+  background: #b9e5ff;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.language-switcher {
+  position: fixed;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 50;
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16);
+}
+
+.language-switcher button {
+  min-width: 2.25rem;
+  border: 0;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: #334155;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 800;
+  line-height: 1;
+  padding: 0.45rem 0.55rem;
+}
+
+.language-switcher button.is-active {
+  background: #0f6fae;
+  color: #ffffff;
+}
+
+/* ============================================================================
+   PREVENÇÃO GLOBAL DE OVERFLOW HORIZONTAL (sem afetar layout)
+   ============================================================================ */
+
+/* 1. Garantia extra para todos os elementos */
+* {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* 2. Reforço no html e body (já existente, mas com max-width) */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+  width: 100%;
+}
+
+/* 3. Bloqueia overflow em containers principais que podem esticar */
+.decmet-shell,
+.hero-copy,
+.classic-widget,
+.metal-panel,
+.inset-panel,
+.module-grid,
+.decoder-grid,
+.site-header .decmet-shell {
+  max-width: 100%;
+  overflow: hidden; /* apenas para estes containers, não para a thumb */
+}
+
+/* 4. Para imagens e SVGs que possam ter largura fixa */
+img,
+svg,
+video,
+iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 5. Corrige elementos com width: 100vw (que ignoram a barra de rolagem) */
+[style*="width: 100vw"] {
+  width: 100% !important;
+}
+
+/* ============================================================================
+   CORREÇÃO FINAL DE OVERFLOW HORIZONTAL (sem afetar thumb)
+   ============================================================================ */
+
+/* 1. Força todos os containers principais a respeitarem a largura */
+.decmet-shell,
+.hero-copy,
+.classic-widget,
+.metal-panel,
+.inset-panel,
+.module-grid,
+.decoder-grid,
+.api-result-grid,
+.airport-page-grid {
+  max-width: 100%;
+  overflow-x: hidden; /* esconde qualquer excesso interno, sem criar scroll */
+}
+
+/* 2. Tabelas e <pre> com rolagem interna, não quebram a página */
+table,
+pre,
+.metar-output,
+.api-data-placeholder,
+.decoded-table-wrapper {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre-wrap; /* quebra linhas longas no <pre> */
+  word-break: break-word; /* quebra palavras longas */
+}
+
+/* 3. Corrige elementos com width: 100vw (substitui por 100%) */
+[style*="width: 100vw"] {
+  width: 100% !important;
+}
+
+/* 4. Garante que flex/grid filhos possam encolher */
+.flex > *,
+.grid > *,
+.inline-flex > *,
+.inline-grid > * {
+  min-width: 0;
+}
+
+/* 5. Bloqueia overflow em imagens e iframes */
+img,
+iframe,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 6. Para inputs e textareas que possam esticar */
+input,
+textarea,
+select {
+  max-width: 100%;
+}
+
+/* 7. Caso algum elemento com position: absolute ou fixed esteja causando overflow,
+   exceto a thumb (já tratada) */
+:not(.portal-nav) {
+  /* Não force max-width em absolutos para não quebrar outros layouts,
+     mas aplicamos overflow hidden no container pai */
+}
+
+/* ============================================================================
+   CORREÇÃO FINAL – OVERFLOW HORIZONTAL RESIDUAL
+   ============================================================================ */
+
+/* 1. Garante que todos os grids internos possam quebrar */
+.decmet-grid,
+.decoder-grid,
+.module-grid,
+.api-result-grid,
+.airport-page-grid {
+  max-width: 100%;
+  grid-template-columns: minmax(0, 1fr); /* força uma coluna em telas pequenas */
+}
+
+/* 2. Corrige tabelas e pré-formatados */
+table,
+pre,
+.decoded-table-wrapper,
+.api-data-placeholder {
+  max-width: 100%;
+  overflow-x: auto;
+  display: block;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* 3. Evita que qualquer elemento com largura fixa ultrapasse */
+[style*="width:"]:not([style*="width: 100%"]):not([style*="width: auto"]) {
+  max-width: 100% !important;
+}
+
+/* 4. Bloqueia overflow em containers principais (exceto thumb) */
+.decmet-shell,
+.hero-copy,
+.classic-widget,
+.metal-panel,
+.inset-panel,
+.site-header .decmet-shell {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* 5. Força quebra de palavras longas (ex: ICAO) */
+* {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* 6. Corrige elementos com display: grid que podem esticar */
+.grid,
+.inline-grid {
+  min-width: 0;
+}
+
+/* 7. Ajusta inputs e textareas */
+input,
+textarea,
+select {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* ============================================================================
+   CORREÇÃO DEFINITIVA DE OVERFLOW HORIZONTAL (sem tocar na thumb)
+   ============================================================================ */
+
+/* 1. Reforça que todos os elementos respeitem a largura */
+*,
+*::before,
+*::after {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* 2. Impede que imagens, SVGs e iframes estiquem */
+img,
+svg,
+video,
+iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 3. Força quebra de palavras longas (evita overflow em textos) */
+* {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* 4. Corrige elementos com width: 100vw (substitui por 100%) */
+[style*="width: 100vw"] {
+  width: 100% !important;
+}
+
+/* 5. Tabelas e <pre> – rolagem interna, não quebram a página */
+table,
+pre,
+.decoded-table-wrapper,
+.metar-output,
+.api-data-placeholder {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* 6. Corrige inputs e textareas que podem esticar */
+input,
+textarea,
+select {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* 7. Força todos os grids internos a terem colunas quebradiças */
+.decmet-grid,
+.decoder-grid,
+.module-grid,
+.api-result-grid,
+.airport-page-grid,
+[class*="grid"] {
+  max-width: 100%;
+  grid-template-columns: minmax(0, 1fr) !important; /* força uma coluna em telas pequenas */
+}
+
+/* 8. Impede que flex-items tenham largura fixa */
+.flex > *,
+.grid > *,
+.inline-flex > *,
+.inline-grid > * {
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+/* 9. Bloqueia overflow em containers principais (exceto thumb) */
+.decmet-shell,
+.hero-copy,
+.classic-widget,
+.metal-panel,
+.inset-panel,
+.site-header .decmet-shell,
+main,
+section,
+article {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* 10. Exceção: thumb bar (já tratada separadamente, não forçamos overflow aqui) */
+.portal-nav {
+  overflow: visible !important; /* mantém o comportamento que você já aprovou */
+}
+
+/* 11. Caso algum elemento com position: absolute/fixed esteja causando overflow,
+    aplicamos overflow-hidden no pai imediato, exceto se for a thumb */
+:not(.portal-nav) > .absolute,
+:not(.portal-nav) > .fixed {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* ============================================================================
+   CORREÇÃO DE ALINHAMENTO DA THUMB BAR (centralização)
+   ============================================================================ */
+
+/* Aplica a centralização absoluta para todos os breakpoints,
+   sobrescrevendo as regras anteriores sem removê-las */
+@media (max-width: 1366px) {
+  .portal-nav {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    margin-inline: 0 !important; /* remove margin auto, pois o transform já centraliza */
+    width: auto !important; /* permite que o max-width limite */
+    max-width: calc(100% - 1.6rem) !important; /* mantém as margens laterais */
+  }
+}
+
+/* Para telas muito pequenas (≤ 360px), ajuste fino */
+@media (max-width: 360px) {
+  .portal-nav {
+    max-width: calc(100% - 1rem) !important;
+  }
+}
+
+/* Para tablets e desktop menores, mantém o mesmo padrão */
+@media (min-width: 521px) and (max-width: 1024px) {
+  .portal-nav {
+    max-width: calc(100% - 2.4rem) !important;
+  }
+}
+
+/* Para telas entre 1025px e 1366px, já temos o left/right, mas agora
+   substituímos pela centralização via transform */
+@media (min-width: 1025px) and (max-width: 1366px) {
+  .portal-nav {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    max-width: 34rem !important; /* mantém o tamanho original */
+  }
+}
+
+/* ============================================================================
+   CENTRALIZAÇÃO DA THUMB BAR – MANTENDO O TAMANHO ORIGINAL
+   ============================================================================ */
+
+/* Aplica em todos os breakpoints onde a barra é fixa */
+@media (max-width: 520px),
+       (min-width: 521px) and (max-width: 767px),
+       (min-width: 768px) and (max-width: 1024px),
+       (min-width: 1025px) and (max-width: 1366px),
+       (min-width: 768px) and (max-width: 1366px) and (max-height: 760px),
+       (min-width: 1367px) {
+  .portal-nav {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;        /* ocupa toda a largura disponível */
+    margin-inline: 0 !important;
+    /* O max-width será herdado dos breakpoints abaixo */
+  }
+}
+
+/* Mantém os max-width originais de cada breakpoint para limitar o tamanho */
+@media (max-width: 520px) {
+  .portal-nav {
+    max-width: 28rem !important;
+  }
+}
+@media (min-width: 521px) and (max-width: 767px) {
+  .portal-nav {
+    max-width: 30rem !important;
+  }
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+  .portal-nav {
+    max-width: 32rem !important;
+  }
+}
+@media (min-width: 1025px) and (max-width: 1366px) {
+  .portal-nav {
+    max-width: 34rem !important;
+  }
+}
+@media (min-width: 768px) and (max-width: 1366px) and (max-height: 760px) {
+  .portal-nav {
+    max-width: 31.5rem !important;
+  }
+}
+@media (min-width: 1367px) {
+  .portal-nav {
+    max-width: 32rem !important; /* ou o valor que você tinha originalmente */
+  }
+}
