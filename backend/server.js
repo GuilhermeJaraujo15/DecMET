@@ -315,3 +315,5 @@ function renderGenericNotFound(res, lang) {
 function getPublicBaseUrl() {
   return String(process.env.PUBLIC_BASE_URL || "https://decmet.com.br").replace(/\/+$/, "");
 }
+
+export default app;
