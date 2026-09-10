@@ -29,38 +29,36 @@
         }
 
         // 3. Fallback de Segurança: Se o JS principal falhar,
-        // liberamos o site após 800ms para evitar tela branca.
+        // liberamos o site após 400ms para evitar tela branca.
         setTimeout(function () {
           document.documentElement.classList.remove("i18n-preparing");
-        }, 800);
+        }, 400);
       })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DecMET | Decodificador METAR e Consulta ICAO para Aviação</title>
+    <title>DecMET | Decodificador METAR, Consulta METAR e Códigos ICAO</title>
     <meta
       name="description"
-      content="Decodifique METAR online, consulte METAR em tempo real via NOAA e busque códigos ICAO de aeródromos. Ferramenta gratuita para pilotos e entusiastas."
+      content="Consulte METAR por ICAO, decodifique reportes meteorológicos aeronáuticos e pesquise códigos ICAO de aeródromos no DecMET."
       data-i18n-description="meta.description.home"
-    />
-    <meta
-      name="keywords"
-      content="decodificador metar, consulta ICAO, meteorologia aeronáutica, METAR online, buscar código ICAO, NOAA METAR, decodificar METAR, relatório METAR"
     />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="DecMET" />
     <meta name="language" content="pt-BR" />
+    <link rel="canonical" href="https://decmet.com.br/" />
+    <link rel="preload" as="image" href="/assets/images/airplane-hero.jpg" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://decmet.com.br/" />
     <meta
       property="og:title"
-      content="DecMET | Decodificador METAR e Consulta ICAO"
+      content="DecMET | Decodificador METAR, Consulta METAR e Códigos ICAO"
       data-i18n-og-title="meta.title.home"
     />
     <meta
       property="og:description"
-      content="Decodifique METAR online, consulte METAR em tempo real via NOAA e busque códigos ICAO de aeródromos."
+      content="Consulte METAR por ICAO, decodifique reportes meteorológicos aeronáuticos e pesquise códigos ICAO de aeródromos no DecMET."
       data-i18n-og-description="meta.description.home"
     />
     <meta
@@ -76,88 +74,60 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta
       name="twitter:title"
-      content="DecMET | Decodificador METAR e Consulta ICAO"
+      content="DecMET | Decodificador METAR, Consulta METAR e Códigos ICAO"
     />
     <meta
       name="twitter:description"
-      content="Ferramenta completa para decodificar METAR e consultar dados NOAA e REDEMET."
+      content="Consulte METAR por ICAO, decodifique reportes meteorológicos aeronáuticos e pesquise códigos ICAO."
     />
     <meta
       name="twitter:image"
       content="https://decmet.com.br/assets/images/airplane-hero.jpg"
     />
 
-    <link rel="canonical" href="https://decmet.com.br/" />
-    <link rel="alternate" hreflang="pt-BR" href="https://decmet.com.br/" />
-    <link rel="alternate" hreflang="en-US" href="https://decmet.com.br/en/" />
-
-    <link rel="icon" type="image/svg+xml" href="/assets/icons/DecMET.svg" />
-
-    <!-- Versão PT -->
-    <title>DecMET | Decodificador METAR Online e Tradução de Reportes</title>
-    <meta
-      name="description"
-      content="Decodifique reportes METAR/SPECI instantaneamente. Tradução clara de grupos de vento, visibilidade, nuvens e pressão (QNH) para pilotos e alunos."
-    />
-
-    <!-- Versão EN -->
-    <title>DecMET | Online METAR Decoder & Aviation Weather Translation</title>
-    <meta
-      name="description"
-      content="Decode METAR/SPECI reports instantly. Clear translation of wind, visibility, clouds, and altimeter (QNH) for pilots and aviation students."
-    />
-
-    <!-- SEO Tags -->
-    <title>DecMET | Decodificador METAR e Consulta ICAO para Aviação</title>
-    <meta
-      name="description"
-      content="Decodifique METAR online, consulte reportes em tempo real via REDEMET/NOAA e busque códigos ICAO. A ferramenta mais leve e clara para pilotos e entusiastas."
-    />
-
-    <!-- Internacionalização -->
-    <link rel="canonical" href="https://decmet.com.br/" />
-    <link rel="alternate" hreflang="pt-BR" href="https://decmet.com.br/" />
-    <link
-      rel="alternate"
-      hreflang="en-US"
-      href="https://decmet.com.br/?lang=en"
-    />
-    <link rel="alternate" hreflang="x-default" href="https://decmet.com.br/" />
+    <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg" />
 
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "DecMET",
-        "applicationCategory": "WeatherApplication",
-        "operatingSystem": "Web",
-        "url": "https://decmet.com.br/",
-        "description": "Decodificador METAR online com consulta em tempo real via NOAA e busca de códigos ICAO para aviação.",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "BRL"
-        },
-        "author": {
-          "@type": "Organization",
-          "name": "DecMET"
-        },
-        "featureList": [
-          "Decodificação automática de METAR",
-          "Consulta METAR em tempo real (NOAA e REDEMET) ",
-          "Busca de códigos ICAO e informações de aeródromos",
-          "Tradução bilíngue (PT/EN)"
-        ],
-        "screenshot": "https://decmet.com.br/assets/screenshot.jpg",
-        "softwareVersion": "2.0",
-        "inLanguage": ["pt-BR", "en-US"]
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "name": "DecMET",
+            "url": "https://decmet.com.br/",
+            "inLanguage": "pt-BR"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "name": "DecMET",
+            "applicationCategory": "WeatherApplication",
+            "operatingSystem": "Web",
+            "url": "https://decmet.com.br/",
+            "description": "Ferramenta web para consultar METAR, decodificar reportes meteorológicos aeronáuticos e pesquisar códigos ICAO.",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "BRL"
+            },
+            "author": {
+              "@type": "Organization",
+              "name": "DecMET"
+            },
+            "featureList": [
+              "Consulta METAR por código ICAO",
+              "Decodificação automática de METAR",
+              "Busca de códigos ICAO e informações de aeródromos"
+            ],
+            "inLanguage": "pt-BR"
+          }
+        ]
       }
     </script>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="./css/global.css" />
-    <link rel="stylesheet" href="./css/layout.css" />
-    <link rel="stylesheet" href="./css/tailwind-custom.css" />
+    <link rel="stylesheet" href="/css/tailwind.css" />
+    <link rel="stylesheet" href="/css/global.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/tailwind-custom.css" />
   </head>
 
   <body>
@@ -187,9 +157,15 @@
           <div class="mt-6 flex flex-wrap gap-3">
             <a
               class="hero-button"
-              href="./pages/decodificador.html"
+              href="/decoder.html"
               data-i18n="home.hero.cta"
               >Decodificar METAR</a
+            >
+            <a
+              class="hero-button"
+              href="/metar.html"
+              data-i18n="home.hero.metarCta"
+              >Consultar METAR</a
             >
           </div>
         </div>
@@ -205,7 +181,7 @@
         >
           <a
             class="portal-nav-link is-active"
-            href="index.html"
+            href="/"
             aria-current="page"
           >
             <svg aria-hidden="true" viewBox="0 0 24 24">
@@ -215,27 +191,27 @@
             </svg>
             <span data-i18n="nav.home">Início</span>
           </a>
-          <a class="portal-nav-link" href="./pages/sobre-metar.html">
+          <a class="portal-nav-link" href="/about-metar.html">
             <svg aria-hidden="true" viewBox="0 0 24 24">
               <path d="M6 4h9l3 3v13H6z" />
               <path d="M14 4v4h4M9 12h6M9 16h6" />
             </svg>
             <span data-i18n="nav.whatIsMetar">METAR?</span>
           </a>
-          <a class="portal-nav-link" href="./pages/aerodromo.html">
+          <a class="portal-nav-link" href="/airports.html">
             <svg aria-hidden="true" viewBox="0 0 24 24">
               <path d="M12 3 5 21h14z" />
               <path d="M9 13h6M8 17h8M10 9h4" />
             </svg>
             <span data-i18n="nav.airports">Aeródromos</span>
           </a>
-          <a class="portal-nav-link" href="./pages/apiMet.html">
+          <a class="portal-nav-link" href="/metar.html">
             <svg aria-hidden="true" viewBox="0 0 24 24">
               <path d="M4 17h16M6 17l2-8h8l2 8M9 9V6h6v3M8 21h8" />
             </svg>
             <span data-i18n="nav.metarQuery">Consulta</span>
           </a>
-          <a class="portal-nav-link" href="./pages/decodificador.html">
+          <a class="portal-nav-link" href="/decoder.html">
             <svg aria-hidden="true" viewBox="0 0 24 24">
               <path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14" />
             </svg>
@@ -378,6 +354,12 @@ DecMET
                   ajudando pilotos, alunos e entusiastas a entenderem o reporte
                   bruto.
                 </p>
+                <a
+                  class="mt-3 block text-sm font-bold text-sky-700"
+                  href="/decoder.html"
+                  data-i18n="home.tools.decoding.link"
+                  >Abrir decodificador METAR</a
+                >
               </article>
               <article class="inset-panel p-4">
                 <h3
@@ -394,6 +376,12 @@ DecMET
                   antes da consulta METAR, reduzindo erros de identificação de
                   estação ou aeroporto.
                 </p>
+                <a
+                  class="mt-3 block text-sm font-bold text-sky-700"
+                  href="/airports.html"
+                  data-i18n="home.tools.icao.link"
+                  >Pesquisar códigos ICAO</a
+                >
               </article>
               <article class="inset-panel p-4">
                 <h3
@@ -410,6 +398,12 @@ DecMET
                   pela API NOAA ou REDEMET, e prepara a mensagem para leitura
                   manual ou decodificação no próprio sistema.
                 </p>
+                <a
+                  class="mt-3 block text-sm font-bold text-sky-700"
+                  href="/metar.html"
+                  data-i18n="home.tools.metar.link"
+                  >Consultar METAR por ICAO</a
+                >
               </article>
             </div>
           </section>
@@ -417,7 +411,7 @@ DecMET
       </section>
     </main>
 
-    <script src="./js/i18n.js" defer></script>
-    <script type="module" src="./js/app.js"></script>
+    <script src="/js/i18n.js" defer></script>
+    <script type="module" src="/js/app.js"></script>
   </body>
 </html>

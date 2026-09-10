@@ -1,19 +1,54 @@
-DecMET — Sistema de Consulta e Decodificação de METAR
+# DecMET
 
-O DecMET é um sistema web voltado para consulta e interpretação de mensagens METAR, desenvolvido para estudantes e entusiastas da área de aviação.
+Sistema web para consulta e decodificação de mensagens METAR, com frontend estático e API Node.js/Express.
 
-A plataforma permite a consulta de condições meteorológicas de aeródromos em tempo real, utilizando dados meteorológicos provenientes da API da REDEMET (Rede de Meteorologia do Comando da Aeronáutica) e NOAA (National Oceanic and Atmospheric Administration).
+## Arquitetura
 
-Funcionalidade principal:
+```text
+Vercel
+├── Static CDN
+│   ├── public/index.html
+│   ├── public/metar.html
+│   ├── public/decoder.html
+│   ├── public/about-metar.html
+│   ├── public/airports.html
+│   ├── public/sitemap.xml
+│   ├── public/robots.txt
+│   ├── public/css
+│   ├── public/js
+│   └── public/assets
+└── Serverless API
+    └── api/index.js
+        └── backend/src/app.js
+            ├── /api/health
+            ├── /api/metar/:icao
+            └── /api/aeroportos/**
+```
 
-O diferencial do sistema está na transformação de METAR bruto em informações legíveis, permitindo uma leitura mais rápida e intuitiva das condições meteorológicas de um aeródromo. Mas não somente isto, mas na obtenção do código ICAO de milhares de aeródromos e consulta do METAR mais recente, via ICAO, dentro do próprio Sistema.
+## Desenvolvimento Local
 
-Infraestrutura:
+```bash
+npm install
+npm run dev
+```
 
-• Front-end: HTML, Vanilla JavaScript e Tailwind CSS;
-• Backend: Node.js + Express;
-• Banco de dados: MySQL (Aiven DBaaS);
-• API das Fontes Primárias: REDEMET e NOAA;
-• Hospedagem: Render (com domínio personalizado).
+O servidor local entrega o frontend estático de `public/` e expõe as APIs em `/api/**`.
 
-Consoante ao acesso, o sistema está disponível em ambiente de produção via domínio personalizado, conforme indicado na seção About do repositório.
+## Build
+
+```bash
+npm run build
+```
+
+O build compila o Tailwind para `public/css/tailwind.css` e não consulta MySQL, REDEMET ou NOAA.
+
+## Produção/Vercel
+
+- `public/` é o output estático.
+- `api/index.js` é o entrypoint serverless.
+- `vercel.json` preserva redirects 301 históricos e roteia `/api/**` para a API Express.
+- URLs canônicas continuam apontando para `https://decmet.com.br`.
+- URLs `*.vercel.app` recebem `X-Robots-Tag: noindex, nofollow`.
+
+Configure as variáveis de ambiente na Vercel. Use `backend/.env.example` apenas como referência local, nunca com valores reais versionados.
+

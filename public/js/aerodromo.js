@@ -457,25 +457,29 @@ function closeSuggestions() {
 async function handleAirportSearch(event) {
   if (event) event.preventDefault();
 
-  const icao = normalizeIcaoCode(searchQueryInput.value);
+  const query = searchQueryInput.value.trim();
+  const icao = normalizeIcaoCode(query);
+  const isIcaoSearch = isValidIcaoCode(icao) && /^[a-zA-Z]{4}$/.test(query);
+  const searchTerm = isIcaoSearch ? icao : query;
 
-  if (!icao) {
+  if (!searchTerm) {
     renderAirportEmptyState();
     return;
   }
 
-  if (!isValidIcaoCode(icao)) {
-    renderAirportValidationError("Informe um código ICAO válido com 4 letras, por exemplo SBGR, SBRJ, KJFK ou EGLL.");
+  if (!isIcaoSearch && searchTerm.length < AUTOCOMPLETE_MIN_CHARS_TEXT) {
+    renderAirportValidationError("Digite ao menos 3 caracteres para pesquisar por nome, cidade, país, IATA ou ICAO.");
     return;
   }
 
-  const providerUsed = getProviderForIcao(icao);
+  const providerUsed = isIcaoSearch ? getProviderForIcao(icao) : "DATABASE";
 
   // GA4 is fired before the network request so API latency/failure does not hide search intent.
-  enviarEventoGA('search_icao', {
-    icao_codigo: icao,
+  enviarEventoGA(isIcaoSearch ? 'search_icao' : 'search_airport', {
+    icao_codigo: isIcaoSearch ? icao : "",
+    search_term: searchTerm,
     provider_used: providerUsed,
-    codigo_pais_icao: icao.slice(0, 1)
+    codigo_pais_icao: isIcaoSearch ? icao.slice(0, 1) : ""
   });
 
   setAirportLoadingState(true);
@@ -483,13 +487,15 @@ async function handleAirportSearch(event) {
   resultsContainer.innerHTML = "";
 
   try {
-    const results = providerUsed === "REDEMET"
-      ? await searchInRedemet(icao)
-      : await searchInNoaa(icao);
+    const results = isIcaoSearch
+      ? providerUsed === "REDEMET"
+        ? await searchInRedemet(icao)
+        : await searchInNoaa(icao)
+      : await fetchAirportResults(searchTerm);
     setAirportLoadingState(false);
 
     if (results && results.length > 0) {
-      renderAirportResults(results, { query: icao });
+      renderAirportResults(results, { query: searchTerm });
       // SEO: Se houver exatamente um resultado, atualiza título
       if (results.length === 1) {
         updateDynamicTitleForAirport(results[0]);
@@ -497,7 +503,7 @@ async function handleAirportSearch(event) {
         safeResetStaticMeta();
       }
     } else {
-      renderAirportNoResults({ query: icao });
+      renderAirportNoResults({ query: searchTerm });
     }
   } catch (error) {
     console.error("Error searching airports:", error);

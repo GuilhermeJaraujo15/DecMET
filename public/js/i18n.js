@@ -15,7 +15,7 @@
       "nav.metarQuery": "Consulta",
       "nav.decoder": "Decodificador",
       "home.title":
-        "DecMET | Decodificação de METAR de maneira clara, leve e operacional.",
+        "DecMET | Decodificador METAR, Consulta METAR e Códigos ICAO",
       "home.hero.eyebrow": "Portal meteorológico aeronáutico",
       "home.hero.heading":
         "DecMET: Decodificação de METAR de maneira clara, leve e operacional.",
@@ -23,6 +23,7 @@
       "home.hero.body":
         "O DecMET organiza o reporte bruto em partes identificadas e descrições legíveis para apoiar consultas rápidas.",
       "home.hero.cta": "Decodificar METAR",
+      "home.hero.metarCta": "Consultar METAR",
       "home.orientation.eyebrow": "ORIENTAÇÃO DO SISTEMA",
       "home.orientation.heading": "Como o DecMET ajuda na leitura do reporte",
       "home.step1.title": "1. Cole o METAR",
@@ -43,7 +44,7 @@
       "home.recommended.flow":
         "DecMET\n├─ Aeródromos\n│  └─ Busque o nome do aeródromo e copie/registre o código ICAO.\n├─ Consulta METAR\n│  └─ Use a página para obter o METAR mais recente via NOAA (National Oceanic and Atmospheric Administration) ou da REDEMET (Rede de Meteorologia do Comando da Aeronáutica). \n└─ Decodificador\n   ├─ Cole o METAR bruto recebido;\n   ├─ Verifique vento, visibilidade, nuvens, temperatura, pressão e tendências;\n   └─ Revise alertas e tokens não reconhecidos para validação final.",
       "about.title":
-        "O que é METAR? Como Interpretar Reportes Aeronáuticos | DecMET",
+        "O que é METAR? Guia de Leitura e Interpretação | DecMET",
       "about.hero.eyebrow": "Guia educacional",
       "about.hero.heading":
         "O que é METAR e como interpretar reportes aeronáuticos",
@@ -115,7 +116,7 @@
       "about.knowledge.Q1016.note":
         "O prefixo Q informa pressão em hectopascais.",
       "airports.title":
-        "Buscar Código ICAO e Informações de Aeródromos | DecMET",
+        "Buscar Código ICAO de Aeródromos | DecMET",
       "airports.hero.eyebrow": "Consulta de dados de aeródromos",
       "airports.hero.heading": "Buscar código ICAO e informações de aeródromos",
       "airports.hero.subtitle": "Pesquise aeródromos, aeroportos e helipontos",
@@ -157,7 +158,7 @@
         "Não foi possível identificar o aeródromo selecionado.",
       "airports.error.loadSelected":
         "Não foi possível carregar o aeródromo selecionado.",
-      "metar.title": "Consultar METAR em Tempo Real via Dados Oficiais",
+      "metar.title": "Consulta METAR em Tempo Real por ICAO | DecMET",
       "metar.hero.eyebrow": "Inspeção meteorológica",
       "metar.hero.heading":
         "Consultar METAR em tempo real com dados NOAA/REDEMET",
@@ -208,7 +209,7 @@
       "metar.loading": "Consultando...",
       "metar.copy.copied": "Copiado",
       "metar.copy.select": "Selecione e copie",
-      "decoder.title": "Decodificar METAR Online e Tradução de METAR | DecMET",
+      "decoder.title": "Decodificador METAR Online | Tradução e Interpretação | DecMET",
       "decoder.hero.eyebrow": "Ferramenta interceptadora",
       "decoder.hero.heading": "Decodificar METAR online",
       "decoder.hero.subtitle":
@@ -232,23 +233,23 @@
       "decoder.table.decoding": "Decodificação",
       "decoder.part": "Parte",
       "meta.title.home":
-        "DecMET | Decodificador METAR e Consulta ICAO para Aviação",
+        "DecMET | Decodificador METAR, Consulta METAR e Códigos ICAO",
       "meta.description.home":
-        "Decodifique METAR online, consulte METAR em tempo real e busque códigos ICAO de aeródromos. Ferramenta gratuita para pilotos e entusiastas.",
+        "Consulte METAR por ICAO, decodifique reportes meteorológicos aeronáuticos e pesquise códigos ICAO de aeródromos no DecMET.",
       "meta.title.decoder":
-        "Decodificador METAR Online | Tradução de Códigos Aeronáuticos",
+        "Decodificador METAR Online | Tradução e Interpretação | DecMET",
       "meta.description.decoder":
-        "Traduza METAR para linguagem clara: vento, visibilidade, nuvens, temperatura e pressão. Decodifique relatórios aeronáuticos instantaneamente.",
-      "meta.title.aerodromo": "Buscar Código ICAO e Aeródromos | DecMET",
+        "Cole um reporte METAR bruto e veja a interpretação de vento, visibilidade, nuvens, temperatura, pressão e demais grupos meteorológicos.",
+      "meta.title.aerodromo": "Buscar Código ICAO de Aeródromos | DecMET",
       "meta.description.aerodromo":
-        "Encontre o código ICAO de qualquer aeroporto ou aeródromo. Consulte nome, cidade, país, IATA e coordenadas para suas consultas METAR.",
-      "meta.title.metar": "Consultar METAR em Tempo Real | DecMET",
+        "Pesquise aeródromos por ICAO, IATA, nome ou localização e encontre o código correto antes de consultar METAR no DecMET.",
+      "meta.title.metar": "Consulta METAR em Tempo Real por ICAO | DecMET",
       "meta.description.metar":
-        "Obtenha o METAR mais recente por código ICAO. Visualize o relatório bruto e copie para decodificação.",
+        "Consulte o METAR mais recente por código ICAO com roteamento via REDEMET para códigos iniciados por S e NOAA para demais códigos, quando disponível.",
       "meta.title.about":
-        "O que é METAR? Guia Completo de Interpretação | DecMET",
+        "O que é METAR? Guia de Leitura e Interpretação | DecMET",
       "meta.description.about":
-        "Aprenda a interpretar METAR: vento, visibilidade, fenômenos, nuvens, temperatura e pressão. Exemplos práticos e árvore de conhecimento.",
+        "Entenda o que é METAR, como ler seus grupos principais e como interpretar vento, visibilidade, fenômenos, nuvens, temperatura e pressão.",
       "metar.dynamic.title":
         "METAR {{icao}} - {{stationName}} | Decodificado em Tempo Real",
       "metar.dynamic.description":
@@ -263,12 +264,15 @@
       "home.tools.decoding.title": "Decodificar METAR",
       "home.tools.decoding.body":
         "O DecMET interpreta grupos de vento, visibilidade, tempo presente, nuvens, temperatura, ponto de orvalho e pressão, ajudando pilotos, alunos e entusiastas a entenderem o reporte bruto.",
+      "home.tools.decoding.link": "Abrir decodificador METAR",
       "home.tools.icao.title": "Buscar ICAO",
       "home.tools.icao.body":
         "A busca de aeródromos facilita encontrar o código ICAO correto antes da consulta METAR, reduzindo erros de identificação de estação ou aeroporto.",
+      "home.tools.icao.link": "Pesquisar códigos ICAO",
       "home.tools.metar.title": "Consultar METAR",
       "home.tools.metar.body":
         "A consulta em tempo real centraliza o METAR bruto retornado por uma das Fontes Oficiais, e prepara a mensagem para leitura manual ou decodificação no próprio sistema.",
+      "home.tools.metar.link": "Consultar METAR por ICAO",
 
       "about.practice.title": "Como interpretar um METAR na prática",
       "about.practice.readByGroups.title":
@@ -282,6 +286,8 @@
       "about.practice.useDecMET.title": "Use o DecMET como apoio de estudo",
       "about.practice.useDecMET.body":
         "Depois de entender a estrutura, utilize a consulta METAR para obter um reporte recente e o decodificador para comparar o código bruto com a interpretação em linguagem direta. Para operações reais, confirme sempre as informações em fontes oficiais.",
+      "about.practice.metarLink": "Consultar METAR por ICAO",
+      "about.practice.decoderLink": "Abrir decodificador METAR",
 
       "airports.howto.title": "Como buscar código ICAO de aeródromos",
       "airports.howto.search.title": "Pesquise por nome, cidade, ICAO ou IATA",
@@ -290,22 +296,25 @@
       "airports.howto.confirm.title": "Confirme o aeródromo antes da consulta",
       "airports.howto.confirm.body":
         "Muitos aeródromos possuem nomes parecidos ou códigos regionais. Verifique localização, país, IATA e coordenadas antes de usar o ICAO na consulta METAR.",
+      "airports.howto.metarLink": "Consultar METAR por ICAO",
 
       "metar.howto.title": "Consulta METAR em tempo real com dados oficiais.",
       "metar.howto.icao.title": "Informe o ICAO correto",
       "metar.howto.icao.body":
         "A consulta METAR depende do código ICAO de quatro letras da estação. Use a página de aeródromos para confirmar o identificador antes de buscar o reporte.",
+      "metar.howto.airportsLink": "Pesquisar código ICAO",
       "metar.howto.read.title": "Leia o METAR bruto",
       "metar.howto.read.body":
         "O retorno preserva a mensagem meteorológica original, permitindo copiar o METAR para análise, treinamento ou decodificação dentro do DecMET.",
       "metar.howto.source.title": "Entenda a fonte dos dados",
       "metar.howto.source.body":
-        "O DecMET consulta dados a partir do tratamento do código ICAO pertencentes a Categoria 'S' (América do Sul), Requisitando-o via REDEMET, e nos demais, o Sistema busca na NOAA.",
+        "O DecMET consulta códigos ICAO iniciados por S via REDEMET, com fallback quando necessário, e usa NOAA AviationWeather para os demais códigos.",
 
       "decoder.howto.title": "Como decodificar METAR online com o DecMET",
       "decoder.howto.step1.title": "1. Cole o reporte bruto",
       "decoder.howto.step1.body":
         "Insira o METAR exatamente como recebido, incluindo o tipo de reporte, código ICAO, horário UTC e os grupos meteorológicos.",
+      "decoder.howto.metarLink": "Consultar METAR por ICAO",
       "decoder.howto.step2.title": "2. Revise cada grupo",
       "decoder.howto.step2.body":
         "A ferramenta identifica vento, visibilidade, alcance visual de pista, nuvens, temperatura, ponto de orvalho, QNH e tendências.",
@@ -323,7 +332,7 @@
       "nav.airports": "Aerodromes",
       "nav.metarQuery": "Lookup",
       "nav.decoder": "Decoder",
-      "home.title": "DecMET | Usage Guide to Decode METAR and Find ICAO Codes",
+      "home.title": "DecMET | METAR Decoder, METAR Lookup and ICAO Codes",
       "home.hero.eyebrow": "Aeronautical weather portal",
       "home.hero.heading":
         "DecMET: Decoding METAR in a clear, lightweight, and operational way.",
@@ -331,6 +340,7 @@
       "home.hero.body":
         "DecMET organizes raw reports into identified parts and readable descriptions to support quick checks.",
       "home.hero.cta": "Decode METAR",
+      "home.hero.metarCta": "Check METAR",
       "home.orientation.eyebrow": "SYSTEM GUIDANCE",
       "home.orientation.heading": "How DecMET helps read the report",
       "home.step1.title": "1. Paste the METAR",
@@ -351,7 +361,7 @@
       "home.recommended.flow":
         "DecMET\n├─ Aerodromes\n│  └─ Search for the aerodrome name and copy/register the ICAO code.\n├─ METAR Lookup\n│  └─ Use the page to get the latest METAR via NOAA (National Oceanic and Atmospheric Administration) or REDEMET (Aeronautical Command Meteorology Network).\n└─ Decoder\n   ├─ Paste the raw METAR received;\n   ├─ Check wind, visibility, clouds, temperature, pressure, and trends;\n   └─ Review alerts and unrecognized tokens for final validation.",
       "about.title":
-        "What is METAR? How to Interpret Aviation Reports | DecMET",
+        "What is METAR? Reading and Interpretation Guide | DecMET",
       "about.hero.eyebrow": "Educational guide",
       "about.hero.heading":
         "What is METAR and how to interpret aviation reports",
@@ -420,7 +430,7 @@
       "about.knowledge.Q1016.explanation": "QNH of 1016 hPa.",
       "about.knowledge.Q1016.note":
         "The Q prefix indicates pressure in hectopascals.",
-      "airports.title": "Find ICAO Codes and Aerodrome Information | DecMET",
+      "airports.title": "Find Aerodrome ICAO Codes | DecMET",
       "airports.hero.eyebrow": "Aerodrome data lookup",
       "airports.hero.heading": "Find ICAO codes and aerodrome information",
       "airports.hero.subtitle": "Search aerodromes, airports, and heliports",
@@ -460,7 +470,7 @@
       "airports.error.identifySelected":
         "Could not identify the selected aerodrome.",
       "airports.error.loadSelected": "Could not load the selected aerodrome.",
-      "metar.title": "Check Real-Time METAR via Official Data",
+      "metar.title": "Real-Time METAR Lookup by ICAO | DecMET",
       "metar.hero.eyebrow": "Weather inspection",
       "metar.hero.heading": "Real-time METAR lookup with NOAA/REDEMET data",
       "metar.hero.subtitle": "Operational input prepared for integration.",
@@ -508,7 +518,7 @@
       "metar.loading": "Checking...",
       "metar.copy.copied": "Copied",
       "metar.copy.select": "Select and copy",
-      "decoder.title": "Decode METAR Online and Translate METAR | DecMET",
+      "decoder.title": "Online METAR Decoder | Translation and Interpretation | DecMET",
       "decoder.hero.eyebrow": "Interceptor tool",
       "decoder.hero.heading": "Decode METAR online",
       "decoder.hero.subtitle":
@@ -531,22 +541,22 @@
       "decoder.table.type": "Type",
       "decoder.table.decoding": "Decoding",
       "decoder.part": "Part",
-      "meta.title.home": "DecMET | METAR Decoder and ICAO Lookup for Aviation",
+      "meta.title.home": "DecMET | METAR Decoder, METAR Lookup and ICAO Codes",
       "meta.description.home":
-        "Decode METAR online, get real-time METAR and search ICAO codes for aerodromes. Free tool for pilots and enthusiasts.",
-      "meta.title.decoder": "Online METAR Decoder | Aviation Code Translation",
+        "Check METAR by ICAO, decode aeronautical weather reports and search aerodrome ICAO codes with DecMET.",
+      "meta.title.decoder": "Online METAR Decoder | Translation and Interpretation | DecMET",
       "meta.description.decoder":
-        "Translate METAR to plain language: wind, visibility, clouds, temperature and pressure. Decode aviation reports instantly.",
-      "meta.title.aerodromo": "Find ICAO Code and Aerodromes | DecMET",
+        "Paste a raw METAR report and see the interpretation of wind, visibility, clouds, temperature, pressure and other weather groups.",
+      "meta.title.aerodromo": "Find Aerodrome ICAO Codes | DecMET",
       "meta.description.aerodromo":
-        "Find the ICAO code for any airport or aerodrome. Check name, city, country, IATA and coordinates for your METAR queries.",
-      "meta.title.metar": "Real-Time METAR Lookup | DecMET",
+        "Search aerodromes by ICAO, IATA, name or location and find the right code before checking METAR in DecMET.",
+      "meta.title.metar": "Real-Time METAR Lookup by ICAO | DecMET",
       "meta.description.metar":
-        "Get the latest METAR by ICAO code. View the raw report and copy for decoding.",
+        "Check the latest METAR by ICAO code with REDEMET routing for codes starting with S and NOAA for other codes when available.",
       "meta.title.about":
-        "What is METAR? Complete Interpretation Guide | DecMET",
+        "What is METAR? Reading and Interpretation Guide | DecMET",
       "meta.description.about":
-        "Learn how to interpret METAR: wind, visibility, phenomena, clouds, temperature and pressure. Practical examples and knowledge tree.",
+        "Understand what METAR is, how to read its main groups and how to interpret wind, visibility, phenomena, clouds, temperature and pressure.",
       "metar.dynamic.title":
         "METAR {{icao}} - {{stationName}} | Real-Time Decoded",
       "metar.dynamic.description":
@@ -561,12 +571,15 @@
       "home.tools.decoding.title": "Decode METAR",
       "home.tools.decoding.body":
         "DecMET interprets wind, visibility, present weather, clouds, temperature, dew point and pressure groups, helping pilots, students and enthusiasts understand the raw report.",
+      "home.tools.decoding.link": "Open METAR decoder",
       "home.tools.icao.title": "Search ICAO",
       "home.tools.icao.body":
         "The aerodrome search makes it easy to find the correct ICAO code before the METAR query, reducing station or airport identification errors.",
+      "home.tools.icao.link": "Search ICAO codes",
       "home.tools.metar.title": "METAR Lookup",
       "home.tools.metar.body":
         "The real-time query centralizes the raw METAR data and prepares the message for human reading or internal system decoding.",
+      "home.tools.metar.link": "Check METAR by ICAO",
 
       "about.practice.title": "How to interpret a METAR in practice",
       "about.practice.readByGroups.title":
@@ -579,6 +592,8 @@
       "about.practice.useDecMET.title": "Use DecMET as a study support",
       "about.practice.useDecMET.body":
         "After understanding the structure, use the METAR lookup to get a recent report and the decoder to compare the raw code with the plain language interpretation. For real operations, always confirm information with official sources.",
+      "about.practice.metarLink": "Check METAR by ICAO",
+      "about.practice.decoderLink": "Open METAR decoder",
 
       "airports.howto.title": "How to find ICAO code for aerodromes",
       "airports.howto.search.title": "Search by name, city, ICAO or IATA",
@@ -587,22 +602,25 @@
       "airports.howto.confirm.title": "Confirm the aerodrome before the query",
       "airports.howto.confirm.body":
         "Many aerodromes have similar names or regional codes. Check location, country, IATA and coordinates before using the ICAO in the METAR query.",
+      "airports.howto.metarLink": "Check METAR by ICAO",
 
       "metar.howto.title": "Real-time METAR lookup with official data.",
       "metar.howto.icao.title": "Enter the correct ICAO",
       "metar.howto.icao.body":
         "The METAR query depends on the four-letter ICAO code of the station. Use the aerodrome page to confirm the identifier before searching for the report.",
+      "metar.howto.airportsLink": "Search ICAO code",
       "metar.howto.read.title": "Read the raw METAR",
       "metar.howto.read.body":
         "The response preserves the original weather message, allowing you to copy the METAR for analysis, training or decoding within DecMET.",
       "metar.howto.source.title": "Understand the data source",
       "metar.howto.source.body":
-        "DecMET retrieves data based on ICAO codes belonging to Category 'S' (South America) by requesting them via REDEMET, while for other codes, the system searches NOAA sources.",
+        "DecMET requests ICAO codes starting with S through REDEMET, with fallback when needed, and uses NOAA AviationWeather for other codes.",
 
       "decoder.howto.title": "How to decode METAR online with DecMET",
       "decoder.howto.step1.title": "1. Paste the raw report",
       "decoder.howto.step1.body":
         "Enter the METAR exactly as received, including the report type, ICAO code, UTC time and weather groups.",
+      "decoder.howto.metarLink": "Check METAR by ICAO",
       "decoder.howto.step2.title": "2. Review each group",
       "decoder.howto.step2.body":
         "The tool identifies wind, visibility, runway visual range, clouds, temperature, dew point, QNH and trends.",

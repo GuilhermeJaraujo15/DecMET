@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://decmet.com.br/sitemap.xml
-Disallow: /api/
-Disallow: /assets/private/

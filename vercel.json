@@ -1,0 +1,151 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "outputDirectory": "public",
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 15
+    }
+  },
+  "redirects": [
+    {
+      "source": "/metar.html",
+      "has": [
+        {
+          "type": "query",
+          "key": "icao"
+        }
+      ],
+      "destination": "/metar.html",
+      "statusCode": 301
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/pages/index.html",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/pages/apiMet.html",
+      "destination": "/metar.html",
+      "statusCode": 301
+    },
+    {
+      "source": "/pages/metar.html",
+      "destination": "/metar.html",
+      "statusCode": 301
+    },
+    {
+      "source": "/pages/decodificador.html",
+      "destination": "/decoder.html",
+      "statusCode": 301
+    },
+    {
+      "source": "/pages/decoder.html",
+      "destination": "/decoder.html",
+      "statusCode": 301
+    },
+    {
+      "source": "/pages/sobre-metar.html",
+      "destination": "/about-metar.html",
+      "statusCode": 301
+    },
+    {
+      "source": "/pages/about-metar.html",
+      "destination": "/about-metar.html",
+      "statusCode": 301
+    },
+    {
+      "source": "/pages/aerodromo.html",
+      "destination": "/airports.html",
+      "statusCode": 301
+    },
+    {
+      "source": "/pages/airports.html",
+      "destination": "/airports.html",
+      "statusCode": 301
+    },
+    {
+      "source": "/estacao/:icao",
+      "destination": "/metar.html",
+      "statusCode": 301
+    },
+    {
+      "source": "/:lang/estacao/:icao",
+      "destination": "/metar.html",
+      "statusCode": 301
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/index.js"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "^(?!decmet\\.com\\.br$)(?!www\\.decmet\\.com\\.br$).+\\.vercel\\.app$"
+        }
+      ],
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=21600"
+        }
+      ]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=21600"
+        }
+      ]
+    },
+    {
+      "source": "/css/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/js/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/assets/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, must-revalidate"
+        }
+      ]
+    }
+  ]
+}

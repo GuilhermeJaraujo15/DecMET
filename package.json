@@ -1,0 +1,32 @@
+{
+  "name": "decmet",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DecMET frontend and serverless API",
+  "type": "module",
+  "scripts": {
+    "build:css": "tailwindcss -c backend/tailwind.config.cjs -i public/css/tailwind-input.css -o public/css/tailwind.css --minify",
+    "build": "npm run build:css",
+    "dev": "concurrently \"tailwindcss -c backend/tailwind.config.cjs -i public/css/tailwind-input.css -o public/css/tailwind.css --watch\" \"node backend/server.js\"",
+    "start": "node backend/server.js",
+    "check": "node --check api/index.js && node --check backend/server.js && node --check backend/src/app.js && node --check backend/src/config/env.js && node --check backend/src/local-static.js && node --check backend/src/db.js && node --check backend/src/controllers/aeroportos.controller.js && node --check backend/src/controllers/metar.controller.js && node --check backend/src/services/aviationWeather.service.js && node --check backend/src/services/redemet.service.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mysql2": "^3.6.5"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.1",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17"
+  },
+  "overrides": {
+    "qs": "^6.16.0"
+  },
+  "engines": {
+    "node": ">=20 <25"
+  }
+}

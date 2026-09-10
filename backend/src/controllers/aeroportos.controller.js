@@ -3,7 +3,7 @@
  * Handles search and suggestions for airport data from MySQL
  */
 
-import pool from "../db.js";
+import { getDatabaseConnection, getPublicDatabaseError, logDatabaseError } from "../db.js";
 
 /**
  * Helper function to read the canonical ICAO code.
@@ -94,7 +94,7 @@ export async function getAirportById(req, res) {
       });
     }
 
-    const connection = await pool.getConnection();
+    const connection = await getDatabaseConnection();
 
     try {
       const sqlQuery = `
@@ -136,12 +136,7 @@ export async function getAirportById(req, res) {
     }
 
   } catch (error) {
-    console.error("Error in getAirportById:", error);
-    res.status(500).json({
-      success: false,
-      error: "Database query failed",
-      message: error.message
-    });
+    return sendDatabaseError(res, "getAirportById", error);
   }
 }
 
@@ -161,7 +156,7 @@ export async function getAirportByIcao(req, res) {
       });
     }
 
-    const connection = await pool.getConnection();
+    const connection = await getDatabaseConnection();
 
     try {
       const sqlQuery = `
@@ -203,12 +198,7 @@ export async function getAirportByIcao(req, res) {
     }
 
   } catch (error) {
-    console.error("Error in getAirportByIcao:", error);
-    res.status(500).json({
-      success: false,
-      error: "Database query failed",
-      message: error.message
-    });
+    return sendDatabaseError(res, "getAirportByIcao", error);
   }
 }
 
@@ -228,7 +218,7 @@ export async function searchAirports(req, res) {
       });
     }
 
-    const connection = await pool.getConnection();
+    const connection = await getDatabaseConnection();
 
     try {
       // Prepare LIKE pattern
@@ -300,11 +290,7 @@ export async function searchAirports(req, res) {
     }
 
   } catch (error) {
-    console.error("Error in searchAirports:", error);
-    res.status(500).json({
-      error: "Database query failed",
-      message: error.message
-    });
+    return sendDatabaseError(res, "searchAirports", error);
   }
 }
 
@@ -341,7 +327,7 @@ export async function getAirportSuggestions(req, res) {
       });
     }
 
-    const connection = await pool.getConnection();
+    const connection = await getDatabaseConnection();
 
     try {
       const codePrefixPattern = `${query}%`;
@@ -401,10 +387,17 @@ export async function getAirportSuggestions(req, res) {
     }
 
   } catch (error) {
-    console.error("Error in getAirportSuggestions:", error);
-    res.status(500).json({
-      error: "Database query failed",
-      message: error.message
-    });
+    return sendDatabaseError(res, "getAirportSuggestions", error);
   }
+}
+
+function sendDatabaseError(res, context, error) {
+  logDatabaseError(context, error);
+  const publicError = getPublicDatabaseError(error);
+
+  return res.status(publicError.status).json({
+    success: false,
+    error: publicError.error,
+    message: publicError.message
+  });
 }

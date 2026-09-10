@@ -27,55 +27,35 @@
     }
 
     // 3. Fallback de Segurança: Se o JS principal falhar, 
-    // liberamos o site após 800ms para evitar tela branca.
+    // liberamos o site após 400ms para evitar tela branca.
     setTimeout(function() {
       document.documentElement.classList.remove('i18n-preparing');
-    }, 800);
+    }, 400);
   })();
 </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Buscar Código ICAO e Informações de Aeródromos | DecMET</title>
+  <title>Buscar Código ICAO de Aeródromos | DecMET</title>
   <meta name="description"
-    content="Encontre o código ICAO de qualquer aeroporto ou aeródromo. Consulte nome, cidade, país, IATA e coordenadas para suas consultas METAR."
+    content="Pesquise aeródromos por ICAO, IATA, nome ou localização e encontre o código correto antes de consultar METAR no DecMET."
     data-i18n-description="meta.description.aerodromo" />
-  <meta name="keywords"
-    content="buscar código ICAO, informações de aeródromos, consulta aeródromo, aeroporto ICAO, código IATA, meteorologia aeronáutica, DecMET" />
   <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://decmet.com.br/airports.html" />
+  <link rel="preload" as="image" href="/assets/images/airplane-hero.jpg" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://decmet.com.br/pages/aerodromo.html" />
-  <meta property="og:title" content="Buscar Código ICAO e Informações de Aeródromos | DecMET"
+  <meta property="og:url" content="https://decmet.com.br/airports.html" />
+  <meta property="og:title" content="Buscar Código ICAO de Aeródromos | DecMET"
     data-i18n-og-title="meta.title.aerodromo" />
   <meta property="og:description"
-    content="Encontre o código ICAO de qualquer aeroporto ou aeródromo para suas consultas METAR."
+    content="Pesquise aeródromos por ICAO, IATA, nome ou localização antes de consultar METAR."
     data-i18n-og-description="meta.description.aerodromo" />
   <meta property="og:image" content="https://decmet.com.br/assets/images/airplane-hero.jpg" />
   <meta property="og:image:alt" content="DecMET - busca de código ICAO e informações de aeródromos" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Buscar Código ICAO e Informações de Aeródromos | DecMET" />
-  <meta name="twitter:description" content="Encontre o código ICAO de aeroportos e aeródromos para consultas METAR." />
+  <meta name="twitter:title" content="Buscar Código ICAO de Aeródromos | DecMET" />
+  <meta name="twitter:description" content="Pesquise aeródromos por ICAO, IATA, nome ou localização antes de consultar METAR." />
   <meta name="twitter:image" content="https://decmet.com.br/assets/images/airplane-hero.jpg" />
-
-  <link rel="canonical" href="https://decmet.com.br/pages/aerodromo.html" />
-
-  <!-- Versão PT -->
-<title>Busca de Códigos ICAO e Aeródromos | Localizador DecMET</title>
-<meta name="description" content="Encontre códigos ICAO, nomes de aeródromos, coordenadas e altitudes. Base de dados completa para busca rápida por nome ou cidade.">
-
-<!-- Versão EN -->
-<title>ICAO Code Lookup & Airport Information | DecMET Finder</title>
-<meta name="description" content="Search for ICAO codes, airport names, coordinates, and elevations. Complete aviation database for quick airport identification.">
-
-<!-- SEO Tags -->
-<title>Buscar ICAO e Informações de Aeródromos | DecMET</title>
-<meta name="description" content="Encontre o código ICAO de qualquer aeroporto ou aeródromo. Consulte nome, cidade, país, IATA e coordenadas geográficas para planejamento de voo.">
-
-<!-- Internacionalização -->
-<link rel="canonical" href="https://decmet.com.br/pages/aerodromo.html" />
-<link rel="alternate" hreflang="pt-BR" href="https://decmet.com.br/pages/aerodromo.html" />
-<link rel="alternate" hreflang="en-US" href="https://decmet.com.br/pages/aerodromo.html?lang=en" />
-<link rel="alternate" hreflang="x-default" href="https://decmet.com.br/pages/aerodromo.html" />
 
   <script type="application/ld+json">
       {
@@ -83,17 +63,20 @@
         "@type": "Dataset",
         "name": "Aeródromos e Códigos ICAO",
         "description": "Base de dados de aeródromos com códigos ICAO, IATA, localização, coordenadas e altitude.",
-        "url": "https://decmet.com.br/pages/aerodromo.html",
-        "keywords": "ICAO, IATA, aeródromo, aeroporto, heliponto",
-        "inLanguage": ["pt-BR", "en-US"]
+        "url": "https://decmet.com.br/airports.html",
+        "creator": {
+          "@type": "Organization",
+          "name": "DecMET"
+        },
+        "inLanguage": "pt-BR"
       }
     </script>
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="../css/global.css" />
-  <link rel="stylesheet" href="../css/layout.css" />
-  <link rel="stylesheet" href="../css/tailwind-custom.css" />
-  <link rel="icon" type="image/svg+xml" href="/assets/icons/DecMET.svg" />
+  <link rel="stylesheet" href="/css/tailwind.css" />
+  <link rel="stylesheet" href="/css/global.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/tailwind-custom.css" />
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg" />
 </head>
 
 <body>
@@ -121,33 +104,33 @@
 
   <main class="decmet-shell py-5">
     <nav class="portal-nav" aria-label="Navegação principal" data-i18n-aria-label="nav.main">
-      <a class="portal-nav-link" href="/index.html">
+      <a class="portal-nav-link" href="/">
         <svg aria-hidden="true" viewBox="0 0 24 24">
           <path d="M4 11.4 12 5l8 6.4V20a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z" />
         </svg>
         <span data-i18n="nav.home">Início</span>
       </a>
-      <a class="portal-nav-link" href="/pages/sobre-metar.html">
+      <a class="portal-nav-link" href="/about-metar.html">
         <svg aria-hidden="true" viewBox="0 0 24 24">
           <path d="M6 4h9l3 3v13H6z" />
           <path d="M14 4v4h4M9 12h6M9 16h6" />
         </svg>
         <span data-i18n="nav.whatIsMetar">METAR?</span>
       </a>
-      <a class="portal-nav-link is-active" href="/pages/aerodromo.html" aria-current="page">
+      <a class="portal-nav-link is-active" href="/airports.html" aria-current="page">
         <svg aria-hidden="true" viewBox="0 0 24 24">
           <path d="M12 3 5 21h14z" />
           <path d="M9 13h6M8 17h8M10 9h4" />
         </svg>
         <span data-i18n="nav.airports">Aeródromos</span>
       </a>
-      <a class="portal-nav-link" href="/pages/apiMet.html">
+      <a class="portal-nav-link" href="/metar.html">
         <svg aria-hidden="true" viewBox="0 0 24 24">
           <path d="M4 17h16M6 17l2-8h8l2 8M9 9V6h6v3M8 21h8" />
         </svg>
         <span data-i18n="nav.metarQuery">Consulta</span>
       </a>
-      <a class="portal-nav-link" href="/pages/decodificador.html">
+      <a class="portal-nav-link" href="/decoder.html">
         <svg aria-hidden="true" viewBox="0 0 24 24">
           <path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14" />
         </svg>
@@ -288,6 +271,7 @@
                 regionais. Verifique localização, país, IATA e coordenadas
                 antes de usar o ICAO na consulta METAR.
               </p>
+              <a class="mt-3 block text-sm font-bold text-sky-700" href="/metar.html" data-i18n="airports.howto.metarLink">Consultar METAR por ICAO</a>
             </article>
           </div>
         </section>
@@ -295,15 +279,8 @@
     </div>
   </main>
 
-  <script src="../js/i18n.js" defer></script>
-  <script type="module" src="../js/aerodromo.js"></script>
-</body>
-
-</html>
-</main>
-
-<script src="../js/i18n.js" defer></script>
-<script type="module" src="../js/aerodromo.js"></script>
+  <script src="/js/i18n.js" defer></script>
+  <script type="module" src="/js/aerodromo.js"></script>
 </body>
 
 </html>

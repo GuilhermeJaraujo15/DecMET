@@ -27,68 +27,58 @@
     }
 
     // 3. Fallback de Segurança: Se o JS principal falhar, 
-    // liberamos o site após 800ms para evitar tela branca.
+    // liberamos o site após 400ms para evitar tela branca.
     setTimeout(function() {
       document.documentElement.classList.remove('i18n-preparing');
-    }, 800);
+    }, 400);
   })();
 </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>O que é METAR? Guia Completo de Interpretação | DecMET</title>
+  <title>O que é METAR? Guia de Leitura e Interpretação | DecMET</title>
   <meta name="description"
-    content="Aprenda a interpretar METAR: vento, visibilidade, fenômenos, nuvens, temperatura e pressão. Exemplos práticos e árvore de conhecimento."
+    content="Entenda o que é METAR, como ler seus grupos principais e como interpretar vento, visibilidade, fenômenos, nuvens, temperatura e pressão."
     data-i18n-description="meta.description.about" />
-  <meta name="keywords"
-    content="o que é METAR, como interpretar METAR, meteorologia aeronáutica, reporte meteorológico aeronáutico, leitura METAR, DecMET" />
   <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://decmet.com.br/about-metar.html" />
+  <link rel="preload" as="image" href="/assets/images/airplane-hero.jpg" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://decmet.com.br/pages/sobre-metar.html" />
-  <meta property="og:title" content="O que é METAR? Guia Completo de Interpretação | DecMET"
+  <meta property="og:url" content="https://decmet.com.br/about-metar.html" />
+  <meta property="og:title" content="O que é METAR? Guia de Leitura e Interpretação | DecMET"
     data-i18n-og-title="meta.title.about" />
   <meta property="og:description"
-    content="Aprenda a interpretar METAR com exemplos práticos. Guia completo para pilotos e entusiastas."
+    content="Entenda o que é METAR e como interpretar seus principais grupos meteorológicos."
     data-i18n-og-description="meta.description.about" />
   <meta property="og:image" content="https://decmet.com.br/assets/images/airplane-hero.jpg" />
   <meta property="og:image:alt" content="DecMET - guia de interpretação de METAR" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="O que é METAR? Guia Completo de Interpretação | DecMET" />
-  <meta name="twitter:description" content="Aprenda a interpretar METAR com exemplos práticos para aviação." />
+  <meta name="twitter:title" content="O que é METAR? Guia de Leitura e Interpretação | DecMET" />
+  <meta name="twitter:description" content="Entenda o que é METAR e como interpretar seus principais grupos meteorológicos." />
   <meta name="twitter:image" content="https://decmet.com.br/assets/images/airplane-hero.jpg" />
-
-  <link rel="canonical" href="https://decmet.com.br/pages/sobre-metar.html" />
-
-  <!-- SEO Tags -->
-<title>O Que é METAR? Guia Completo de Interpretação | DecMET</title>
-<meta name="description" content="Aprenda a ler e interpretar reportes meteorológicos aeronáuticos. Entenda a estrutura do METAR, códigos de nuvens, fenômenos e visibilidade vertical.">
-
-<!-- Internacionalização -->
-<link rel="canonical" href="https://decmet.com.br/pages/sobre-metar.html" />
-<link rel="alternate" hreflang="pt-BR" href="https://decmet.com.br/pages/sobre-metar.html" />
-<link rel="alternate" hreflang="en-US" href="https://decmet.com.br/pages/sobre-metar.html?lang=en" />
-<link rel="alternate" hreflang="x-default" href="https://decmet.com.br/pages/sobre-metar.html" />
 
   <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Article",
-        "headline": "O que é METAR? Guia Completo de Interpretação",
-        "description": "Guia completo para entender e interpretar relatórios METAR na aviação.",
+        "headline": "O que é METAR? Guia de Leitura e Interpretação",
+        "description": "Guia para entender o formato METAR e interpretar seus principais grupos meteorológicos.",
+        "mainEntityOfPage": "https://decmet.com.br/about-metar.html",
         "author": {
           "@type": "Organization",
           "name": "DecMET"
         },
         "educationalLevel": "Beginner",
-        "articleSection": "Meteorologia Aeronáutica"
+        "articleSection": "Meteorologia Aeronáutica",
+        "inLanguage": "pt-BR"
       }
     </script>
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="../css/global.css" />
-  <link rel="stylesheet" href="../css/layout.css" />
-  <link rel="stylesheet" href="../css/tailwind-custom.css" />
-  <link rel="icon" type="image/svg+xml" href="/assets/icons/DecMET.svg" />
+  <link rel="stylesheet" href="/css/tailwind.css" />
+  <link rel="stylesheet" href="/css/global.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/tailwind-custom.css" />
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg" />
 </head>
 
 <body>
@@ -118,33 +108,33 @@
   <main class="decmet-shell py-5">
     <section class="space-y-4">
       <nav class="portal-nav" aria-label="Navegação principal" data-i18n-aria-label="nav.main">
-        <a class="portal-nav-link" href="/index.html">
+        <a class="portal-nav-link" href="/">
           <svg aria-hidden="true" viewBox="0 0 24 24">
             <path d="M4 11.4 12 5l8 6.4V20a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z" />
           </svg>
           <span data-i18n="nav.home">Início</span>
         </a>
-        <a class="portal-nav-link is-active" href="/pages/sobre-metar.html" aria-current="page">
+        <a class="portal-nav-link is-active" href="/about-metar.html" aria-current="page">
           <svg aria-hidden="true" viewBox="0 0 24 24">
             <path d="M6 4h9l3 3v13H6z" />
             <path d="M14 4v4h4M9 12h6M9 16h6" />
           </svg>
           <span data-i18n="nav.whatIsMetar">METAR?</span>
         </a>
-        <a class="portal-nav-link" href="/pages/aerodromo.html">
+        <a class="portal-nav-link" href="/airports.html">
           <svg aria-hidden="true" viewBox="0 0 24 24">
             <path d="M12 3 5 21h14z" />
             <path d="M9 13h6M8 17h8M10 9h4" />
           </svg>
           <span data-i18n="nav.airports">Aeródromos</span>
         </a>
-        <a class="portal-nav-link" href="/pages/apiMet.html">
+        <a class="portal-nav-link" href="/metar.html">
           <svg aria-hidden="true" viewBox="0 0 24 24">
             <path d="M4 17h16M6 17l2-8h8l2 8M9 9V6h6v3M8 21h8" />
           </svg>
           <span data-i18n="nav.metarQuery">Consulta</span>
         </a>
-        <a class="portal-nav-link" href="/pages/decodificador.html">
+        <a class="portal-nav-link" href="/decoder.html">
           <svg aria-hidden="true" viewBox="0 0 24 24">
             <path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14" />
           </svg>
@@ -319,28 +309,25 @@
             <h3 class="text-sm font-bold uppercase text-sky-700" data-i18n="about.practice.useDecMET.title">
               Use o DecMET como apoio de estudo
             </h3>
-            <p class="mt-2 text-sm leading-relaxed text-slate-700" data-i18n="about.practice.useDecMET.body">
-              Depois de entender a estrutura, utilize a consulta METAR para
-              obter um reporte recente e o decodificador para comparar o
-              código bruto com a interpretação em linguagem direta. Para
-              operações reais, confirme sempre as informações em fontes
-              oficiais.
-            </p>
-          </article>
+              <p class="mt-2 text-sm leading-relaxed text-slate-700" data-i18n="about.practice.useDecMET.body">
+                Depois de entender a estrutura, utilize a consulta METAR para
+                obter um reporte recente e o decodificador para comparar o
+                código bruto com a interpretação em linguagem direta. Para
+                operações reais, confirme sempre as informações em fontes
+                oficiais.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-3">
+                <a class="text-sm font-bold text-sky-700" href="/metar.html" data-i18n="about.practice.metarLink">Consultar METAR por ICAO</a>
+                <a class="text-sm font-bold text-sky-700" href="/decoder.html" data-i18n="about.practice.decoderLink">Abrir decodificador METAR</a>
+              </div>
+            </article>
         </div>
       </section>
     </section>
   </main>
 
-  <script src="../js/i18n.js" defer></script>
-  <script type="module" src="../js/app.js"></script>
-</body>
-
-</html>
-</main>
-
-<script src="../js/i18n.js" defer></script>
-<script type="module" src="../js/app.js"></script>
+  <script src="/js/i18n.js" defer></script>
+  <script type="module" src="/js/app.js"></script>
 </body>
 
 </html>
