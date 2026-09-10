@@ -87,3 +87,5 @@ database/data/*.csv
 !database/schema.sql
 !database/import_ourairports.sql
 !database/README_DB.md
+.vercel
+.env*
