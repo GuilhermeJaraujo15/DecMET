@@ -81,3 +81,33 @@
 .module-grid .classic-widget .flex.flex-wrap.items-center > span.ml-auto {
   margin-top: 0.6rem; /* lower the right-aligned tag for separation */
 }
+
+/* Crédito comum às telas principais, antes do espaço da navegação fixa. */
+.site-copyright {
+  margin-top: 1rem;
+  text-align: center;
+  color: #475569;
+}
+
+.site-copyright small {
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.site-copyright a {
+  display: inline-block;
+  padding-block: 0.25rem;
+  text-underline-offset: 0.2em;
+}
+
+.site-copyright a:hover,
+.site-copyright a:focus-visible {
+  color: #0369a1;
+  text-decoration: underline;
+}
+
+.site-copyright a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
