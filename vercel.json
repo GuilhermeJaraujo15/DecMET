@@ -9,17 +9,6 @@
   },
   "redirects": [
     {
-      "source": "/metar.html",
-      "has": [
-        {
-          "type": "query",
-          "key": "icao"
-        }
-      ],
-      "destination": "/metar.html",
-      "statusCode": 301
-    },
-    {
       "source": "/index.html",
       "destination": "/",
       "statusCode": 301

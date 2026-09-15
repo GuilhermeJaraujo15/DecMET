@@ -37,7 +37,9 @@ export function getDatabasePool() {
   return pool;
 }
 
-export async function closeDatabasePool() {
+export async function closeDatabasePool(expectedPool = pool) {
+  // An acquisition from an old pool must never close its replacement.
+  if (!expectedPool || pool !== expectedPool) return;
   const activePool = pool;
   pool = undefined;
 
@@ -51,10 +53,12 @@ export async function closeDatabasePool() {
 }
 
 export async function getDatabaseConnection() {
+  let activePool;
   try {
-    return await getDatabasePool().getConnection();
+    activePool = getDatabasePool();
+    return await activePool.getConnection();
   } catch (error) {
-    await closeDatabasePool();
+    if (activePool) await closeDatabasePool(activePool);
     throw new DatabaseUnavailableError(error);
   }
 }

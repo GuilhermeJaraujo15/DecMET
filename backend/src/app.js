@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import aeroportosRoutes from "./routes/aeroportos.routes.js";
 import metarRoutes from "./routes/metar.routes.js";
+import { disableResponseCache } from "./utils/http-cache.js";
 
 const LOCAL_PORTS = new Set(["3000", "3001", "5173", "5500"]);
 const PRODUCTION_ORIGINS = ["https://decmet.com.br"];
@@ -18,6 +19,10 @@ export function createApiApp() {
 
 export function configureApiApp(app) {
   app.disable("x-powered-by");
+  app.use((req, res, next) => {
+    disableResponseCache(res);
+    next();
+  });
   app.use(createCorsMiddleware());
   app.use(express.json({ limit: "64kb" }));
 
@@ -48,6 +53,8 @@ export function installApiFinalHandlers(app, options = {}) {
     if (res.headersSent) {
       return next(err);
     }
+
+    disableResponseCache(res);
 
     const status = getHttpStatus(err);
     const error = getPublicErrorCode(err, status);
@@ -187,4 +194,3 @@ function getPublicErrorMessage(err, status) {
 }
 
 export default createApiApp();
-

@@ -14,14 +14,6 @@ const STATIC_REDIRECTS = [
 ];
 
 export function registerLocalStaticFrontend(app, publicDir) {
-  app.get("/metar.html", (req, res, next) => {
-    if (hasIcaoQueryParameter(req)) {
-      return res.redirect(301, "/metar.html");
-    }
-
-    return next();
-  });
-
   for (const { source, destination } of STATIC_REDIRECTS) {
     app.get(source, redirectPermanent(destination));
   }
@@ -37,8 +29,3 @@ function redirectPermanent(destination) {
     res.redirect(301, destination);
   };
 }
-
-function hasIcaoQueryParameter(req) {
-  return Object.keys(req.query || {}).some(key => key.toLowerCase() === "icao");
-}
-

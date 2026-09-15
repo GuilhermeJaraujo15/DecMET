@@ -42,6 +42,16 @@ function buildApiUrl(path, params = {}) {
   return `${url.pathname}${url.search}`;
 }
 
+function normalizeAirportQuery(value) {
+  // The backend already compares uppercase terms. Keep internal spaces literal.
+  return String(value ?? "").trim().toUpperCase();
+}
+
+function isSuggestionQueryEligible(query) {
+  return query.length <= 100 && (query.length >= AUTOCOMPLETE_MIN_CHARS_TEXT ||
+    (query.length >= AUTOCOMPLETE_MIN_CHARS && /^[A-Z]+$/.test(query)));
+}
+
 function safeSetDynamicMeta(titleKey, descriptionKey, variables = {}, fallbackTitle = "") {
   try {
     const seo = window.DecMETI18n;
@@ -144,6 +154,9 @@ let currentAbortController = null;
 let lastSelectedIndex = -1;
 let currentRenderedResults = null;
 let currentErrorKey = null;
+let searchInProgress = false;
+let inputRevision = 0;
+let suggestionsRevision = 0;
 
 // Initialize
 onDomReady(initAirportSearch);
@@ -211,11 +224,10 @@ function handleLanguageChange() {
  * Handle input changes for autocomplete suggestions
  */
 function handleAirportInput(event) {
-  const query = event.target.value.trim();
-
-  if (debounceTimer) {
-    clearTimeout(debounceTimer);
-  }
+  const query = normalizeAirportQuery(event.target.value);
+  inputRevision++;
+  cancelAirportSuggestions();
+  closeSuggestions();
 
   if (!query) {
     closeSuggestions();
@@ -224,9 +236,20 @@ function handleAirportInput(event) {
     return;
   }
 
+  if (!isSuggestionQueryEligible(query)) return;
+
   debounceTimer = setTimeout(() => {
+    debounceTimer = null;
     fetchAirportSuggestions(query);
   }, AUTOCOMPLETE_DEBOUNCE_MS);
+}
+
+function cancelAirportSuggestions() {
+  clearTimeout(debounceTimer);
+  debounceTimer = null;
+  suggestionsRevision++;
+  currentAbortController?.abort();
+  currentAbortController = null;
 }
 
 /**
@@ -285,14 +308,13 @@ function handleClickOutside(event) {
  * Fetch autocomplete suggestions from backend
  */
 async function fetchAirportSuggestions(query) {
+  if (!isSuggestionQueryEligible(query)) return;
+  const revision = suggestionsRevision;
+  const controller = new AbortController();
+  currentAbortController = controller;
   try {
-    if (currentAbortController) {
-      currentAbortController.abort();
-    }
-    currentAbortController = new AbortController();
-
     const response = await fetch(buildApiUrl(API_ENDPOINTS.suggestions, { q: query }), {
-      signal: currentAbortController.signal
+      signal: controller.signal
     });
 
     if (!response.ok) {
@@ -300,6 +322,7 @@ async function fetchAirportSuggestions(query) {
     }
 
     const data = await response.json();
+    if (controller.signal.aborted || revision !== suggestionsRevision) return;
 
     if (data.success && data.suggestions && data.suggestions.length > 0) {
       renderAirportSuggestions(data.suggestions);
@@ -307,10 +330,12 @@ async function fetchAirportSuggestions(query) {
       closeSuggestions();
     }
   } catch (error) {
-    if (error.name !== "AbortError") {
+    if (!controller.signal.aborted && revision === suggestionsRevision && error.name !== "AbortError") {
       console.error("Error fetching suggestions:", error);
       closeSuggestions();
     }
+  } finally {
+    if (currentAbortController === controller) currentAbortController = null;
   }
 }
 
@@ -396,12 +421,15 @@ function highlightSuggestion(index, suggestions) {
  * Select a suggestion and fetch the exact airport record
  */
 async function selectAirportSuggestion(suggestionElement) {
+  cancelAirportSuggestions();
+  if (searchInProgress) return;
   const airportId = suggestionElement.dataset.airportId;
   const searchValue = suggestionElement.dataset.searchValue ||
     suggestionElement.querySelector(".suggestion-name")?.textContent ||
     "";
 
   searchQueryInput.value = searchValue;
+  const revision = ++inputRevision;
   closeSuggestions();
   resultsContainer.innerHTML = "";
 
@@ -410,18 +438,24 @@ async function selectAirportSuggestion(suggestionElement) {
     return;
   }
 
+  searchInProgress = true;
   setAirportLoadingState(true);
 
   try {
     const selectedAirport = await fetchAirportById(airportId);
+    if (revision !== inputRevision) return;
     setAirportLoadingState(false);
     renderAirportResults([selectedAirport], { query: searchValue });
     // SEO: Título dinâmico para o aeródromo selecionado
     updateDynamicTitleForAirport(selectedAirport);
   } catch (error) {
+    if (revision !== inputRevision) return;
     console.error("Error loading selected airport:", error);
     setAirportLoadingState(false);
     renderAirportError("airports.error.loadSelected");
+  } finally {
+    searchInProgress = false;
+    if (revision !== inputRevision) setAirportLoadingState(false);
   }
 }
 
@@ -456,6 +490,9 @@ function closeSuggestions() {
  */
 async function handleAirportSearch(event) {
   if (event) event.preventDefault();
+  cancelAirportSuggestions();
+  closeSuggestions();
+  if (searchInProgress) return;
 
   const query = searchQueryInput.value.trim();
   const icao = normalizeIcaoCode(query);
@@ -482,16 +519,15 @@ async function handleAirportSearch(event) {
     codigo_pais_icao: isIcaoSearch ? icao.slice(0, 1) : ""
   });
 
+  const revision = inputRevision;
+  searchInProgress = true;
   setAirportLoadingState(true);
   closeSuggestions();
   resultsContainer.innerHTML = "";
 
   try {
-    const results = isIcaoSearch
-      ? providerUsed === "REDEMET"
-        ? await searchInRedemet(icao)
-        : await searchInNoaa(icao)
-      : await fetchAirportResults(searchTerm);
+    const results = await fetchAirportResults(searchTerm);
+    if (revision !== inputRevision) return;
     setAirportLoadingState(false);
 
     if (results && results.length > 0) {
@@ -506,58 +542,24 @@ async function handleAirportSearch(event) {
       renderAirportNoResults({ query: searchTerm });
     }
   } catch (error) {
+    if (revision !== inputRevision) return;
+    if (isIcaoSearch) {
+      sendMetarApiErrorEvent({ provider: providerUsed, icao, code: error.status || error.message });
+    }
     console.error("Error searching airports:", error);
     setAirportLoadingState(false);
     renderAirportError("airports.state.error");
-  }
-}
-
-/**
- * Official routing for Brazilian ICAO codes. Plug the REDEMET METAR endpoint here
- * when the backend route is available.
- */
-async function searchInRedemet(icao) {
-  try {
-    return await fetchAirportResults(icao, { provider: "REDEMET" });
-  } catch (error) {
-    sendMetarApiErrorEvent({
-      provider: "REDEMET",
-      icao,
-      code: error.status || error.message
-    });
-
-    return searchInNoaa(icao);
-  }
-}
-
-/**
- * International ICAO routing. Plug the NOAA METAR endpoint here when needed.
- */
-async function searchInNoaa(icao) {
-  try {
-    return await fetchAirportResults(icao, { provider: "NOAA" });
-  } catch (error) {
-    sendMetarApiErrorEvent({
-      provider: "NOAA",
-      icao,
-      code: error.status || error.message
-    });
-
-    throw error;
+  } finally {
+    searchInProgress = false;
+    if (revision !== inputRevision) setAirportLoadingState(false);
   }
 }
 
 /**
  * Fetch full search results from backend
  */
-async function fetchAirportResults(query, options = {}) {
-  const params = { q: query };
-
-  if (options.provider) {
-    params.provider = options.provider;
-  }
-
-  const response = await fetch(buildApiUrl(API_ENDPOINTS.search, params));
+async function fetchAirportResults(query) {
+  const response = await fetch(buildApiUrl(API_ENDPOINTS.search, { q: normalizeAirportQuery(query) }));
 
   if (!response.ok) {
     const error = new Error(`API error: ${response.status}`);

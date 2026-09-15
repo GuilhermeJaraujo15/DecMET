@@ -1,5 +1,6 @@
 import http from "http";
 import https from "https";
+import { requestText } from "../utils/request-text.js";
 import { getFlightCategoryFromMetar } from "../utils/flight-category.js";
 
 const DEFAULT_BASE_URL = "https://aviationweather.gov/api/data";
@@ -53,9 +54,9 @@ export class AviationWeatherError extends Error {
   }
 }
 
-export async function getLatestMetarByIcao(icao) {
+export async function getLatestMetarByIcao(icao, options = {}) {
   const requestUrl = buildMetarUrl(icao);
-  const response = await requestJson(requestUrl);
+  const response = await requestJson(requestUrl, options.deadline);
 
   if (response.statusCode === 204) {
     throw new AviationWeatherError(
@@ -106,55 +107,19 @@ function ensureTrailingSlash(value) {
   return String(value).endsWith("/") ? String(value) : `${value}/`;
 }
 
-function requestJson(url) {
-  const timeoutMs = getTimeoutMs();
-  const client = url.protocol === "http:" ? http : https;
-
-  return new Promise((resolve, reject) => {
-    const request = client.request(url, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "User-Agent": getUserAgent()
-      },
-      timeout: timeoutMs
-    }, response => {
-      let body = "";
-
-      response.setEncoding("utf8");
-      response.on("data", chunk => {
-        body += chunk;
-      });
-      response.on("end", () => {
-        resolve({
-          statusCode: response.statusCode,
-          body
-        });
-      });
-    });
-
-    request.on("timeout", () => {
-      request.destroy(new AviationWeatherError(
-        "NOAA_TIMEOUT",
-        "A consulta ao serviço meteorológico excedeu o tempo limite. Tente novamente em instantes.",
-        504
-      ));
-    });
-
-    request.on("error", error => {
-      if (error instanceof AviationWeatherError) {
-        reject(error);
-        return;
-      }
-
-      reject(new AviationWeatherError(
-        "NOAA_NETWORK_ERROR",
-        "METAR service is temporarily unavailable. Please try again later.",
-        502
-      ));
-    });
-
-    request.end();
+function requestJson(url, deadline) {
+  return requestText(url.protocol === "http:" ? http : https, url, {
+    headers: { Accept: "application/json", "User-Agent": getUserAgent() },
+    timeoutMs: getTimeoutMs(),
+    deadline,
+    timeoutError: () => new AviationWeatherError(
+      "NOAA_TIMEOUT",
+      "A consulta ao serviço meteorológico excedeu o tempo limite. Tente novamente em instantes.",
+      504
+    ),
+    networkError: () => new AviationWeatherError(
+      "NOAA_NETWORK_ERROR", "METAR service is temporarily unavailable. Please try again later.", 502
+    )
   });
 }
 

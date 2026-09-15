@@ -4,6 +4,7 @@
  */
 
 import { getDatabaseConnection, getPublicDatabaseError, logDatabaseError } from "../db.js";
+import { cachePublicResponse, disableResponseCache } from "../utils/http-cache.js";
 
 /**
  * Helper function to read the canonical ICAO code.
@@ -68,7 +69,7 @@ function normalizeAirport(row) {
  * Normalize search query for safe database queries
  */
 function normalizeQuery(query) {
-  if (!query) return null;
+  if (typeof query !== "string" || query.length > 100) return null;
 
   let normalized = query.trim().toUpperCase();
 
@@ -78,15 +79,21 @@ function normalizeQuery(query) {
   return normalized;
 }
 
+function escapeLike(value) {
+  // Explicit escape character works with or without NO_BACKSLASH_ESCAPES.
+  return value.replace(/[!%_]/g, "!$&");
+}
+
 /**
  * GET /api/aeroportos/:id
  * Returns one exact airport by database ID
  */
 export async function getAirportById(req, res) {
+  disableResponseCache(res);
   try {
     const { id } = req.params;
 
-    if (!/^\d+$/.test(String(id))) {
+    if (!/^\d{1,10}$/.test(String(id)) || Number(id) > 2147483647) {
       return res.status(400).json({
         success: false,
         error: "Invalid airport ID",
@@ -126,6 +133,7 @@ export async function getAirportById(req, res) {
         });
       }
 
+      cachePublicResponse(res, 3600);
       res.json({
         success: true,
         result: normalizeAirport(rows[0])
@@ -145,6 +153,7 @@ export async function getAirportById(req, res) {
  * Returns one exact airport by canonical ICAO code
  */
 export async function getAirportByIcao(req, res) {
+  disableResponseCache(res);
   try {
     const icao = normalizeCode(req.params.icao);
 
@@ -188,6 +197,7 @@ export async function getAirportByIcao(req, res) {
         });
       }
 
+      cachePublicResponse(res, 3600);
       res.json({
         success: true,
         result: normalizeAirport(rows[0])
@@ -207,6 +217,7 @@ export async function getAirportByIcao(req, res) {
  * Returns complete airport search results
  */
 export async function searchAirports(req, res) {
+  disableResponseCache(res);
   try {
     const search = req.query.search ?? req.query.q;
     const query = normalizeQuery(search);
@@ -222,7 +233,7 @@ export async function searchAirports(req, res) {
 
     try {
       // Prepare LIKE pattern
-      const likePattern = `%${query}%`;
+      const likePattern = `%${escapeLike(query)}%`;
 
       // SQL query using airports.icao as the canonical ICAO source.
       const sqlQuery = `
@@ -243,16 +254,16 @@ export async function searchAirports(req, res) {
         WHERE
           a.icao = ?
           OR a.iata_code = ?
-          OR a.name LIKE ?
-          OR a.municipality LIKE ?
-          OR a.keywords LIKE ?
+          OR a.name LIKE ? ESCAPE '!'
+          OR a.municipality LIKE ? ESCAPE '!'
+          OR a.keywords LIKE ? ESCAPE '!'
         ORDER BY
           CASE
             WHEN a.icao = ? THEN 1
             WHEN a.iata_code = ? THEN 2
-            WHEN a.name LIKE ? THEN 3
-            WHEN a.municipality LIKE ? THEN 4
-            WHEN a.keywords LIKE ? THEN 5
+            WHEN a.name LIKE ? ESCAPE '!' THEN 3
+            WHEN a.municipality LIKE ? ESCAPE '!' THEN 4
+            WHEN a.keywords LIKE ? ESCAPE '!' THEN 5
             ELSE 7
           END,
           a.type = 'large_airport' DESC,
@@ -269,6 +280,7 @@ export async function searchAirports(req, res) {
       ]);
 
       const results = rows.map(normalizeAirport);
+      cachePublicResponse(res, 300);
 
       if (results.length === 0) {
         return res.json({
@@ -299,6 +311,7 @@ export async function searchAirports(req, res) {
  * Returns lightweight autocomplete suggestions
  */
 export async function getAirportSuggestions(req, res) {
+  disableResponseCache(res);
   try {
     const search = req.query.search ?? req.query.q;
     const query = normalizeQuery(search);
@@ -312,6 +325,7 @@ export async function getAirportSuggestions(req, res) {
 
     // For short queries, only suggest if looks like a code
     if (query.length < 2) {
+      cachePublicResponse(res, 300);
       return res.json({
         success: true,
         suggestions: [],
@@ -320,6 +334,7 @@ export async function getAirportSuggestions(req, res) {
     }
 
     if (query.length < 3 && !/^[A-Z]{2,4}$/.test(query)) {
+      cachePublicResponse(res, 300);
       return res.json({
         success: true,
         suggestions: [],
@@ -330,8 +345,8 @@ export async function getAirportSuggestions(req, res) {
     const connection = await getDatabaseConnection();
 
     try {
-      const codePrefixPattern = `${query}%`;
-      const likePattern = `%${query}%`;
+      const codePrefixPattern = `${escapeLike(query)}%`;
+      const likePattern = `%${escapeLike(query)}%`;
 
       // Lightweight SQL for suggestions using airports.icao as the display code.
       const sqlQuery = `
@@ -347,18 +362,18 @@ export async function getAirportSuggestions(req, res) {
           a.type
         FROM airports a
         WHERE
-          a.icao LIKE ?
-          OR a.iata_code LIKE ?
-          OR a.name LIKE ?
-          OR a.municipality LIKE ?
+          a.icao LIKE ? ESCAPE '!'
+          OR a.iata_code LIKE ? ESCAPE '!'
+          OR a.name LIKE ? ESCAPE '!'
+          OR a.municipality LIKE ? ESCAPE '!'
         ORDER BY
           CASE
             WHEN a.icao = ? THEN 1
             WHEN a.iata_code = ? THEN 2
-            WHEN a.icao LIKE ? THEN 3
-            WHEN a.iata_code LIKE ? THEN 4
-            WHEN a.name LIKE ? THEN 5
-            WHEN a.municipality LIKE ? THEN 6
+            WHEN a.icao LIKE ? ESCAPE '!' THEN 3
+            WHEN a.iata_code LIKE ? ESCAPE '!' THEN 4
+            WHEN a.name LIKE ? ESCAPE '!' THEN 5
+            WHEN a.municipality LIKE ? ESCAPE '!' THEN 6
             ELSE 8
           END,
           a.type = 'large_airport' DESC,
@@ -375,6 +390,7 @@ export async function getAirportSuggestions(req, res) {
       ]);
 
       const suggestions = rows.map(normalizeAirport);
+      cachePublicResponse(res, 300);
 
       res.json({
         success: true,
@@ -392,6 +408,7 @@ export async function getAirportSuggestions(req, res) {
 }
 
 function sendDatabaseError(res, context, error) {
+  disableResponseCache(res);
   logDatabaseError(context, error);
   const publicError = getPublicDatabaseError(error);
 

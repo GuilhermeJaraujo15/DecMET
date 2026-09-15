@@ -1,4 +1,5 @@
 import https from "https";
+import { requestText } from "../utils/request-text.js";
 import { getFlightCategoryFromMetar } from "../utils/flight-category.js";
 
 const DEFAULT_BASE_URL = "https://api-redemet.decea.mil.br";
@@ -56,7 +57,7 @@ export class RedemetApiError extends Error {
   }
 }
 
-export async function getLatestRedemetMetarByIcao(icao) {
+export async function getLatestRedemetMetarByIcao(icao, options = {}) {
   const apiKey = String(process.env.REDEMET_API_KEY ?? "").trim();
 
   if (!apiKey) {
@@ -68,7 +69,7 @@ export async function getLatestRedemetMetarByIcao(icao) {
   }
 
   const requestUrl = buildRedemetMetarUrl(icao);
-  const response = await requestJson(requestUrl, apiKey);
+  const response = await requestJson(requestUrl, apiKey, options.deadline);
 
   if (!isSuccessStatus(response.statusCode)) {
     throw mapStatusToError(response.statusCode);
@@ -135,54 +136,17 @@ function ensureTrailingSlash(value) {
   return String(value).endsWith("/") ? String(value) : `${value}/`;
 }
 
-function requestJson(url, apiKey) {
-  const timeoutMs = getTimeoutMs();
-
-  return new Promise((resolve, reject) => {
-    const request = https.request(url, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "X-Api-Key": apiKey
-      },
-      timeout: timeoutMs
-    }, response => {
-      let body = "";
-
-      response.setEncoding("utf8");
-      response.on("data", chunk => {
-        body += chunk;
-      });
-      response.on("end", () => {
-        resolve({
-          statusCode: response.statusCode,
-          body
-        });
-      });
-    });
-
-    request.on("timeout", () => {
-      request.destroy(new RedemetApiError(
-        "REDEMET_TIMEOUT",
-        "A consulta à REDEMET excedeu o tempo limite.",
-        504
-      ));
-    });
-
-    request.on("error", error => {
-      if (error instanceof RedemetApiError) {
-        reject(error);
-        return;
-      }
-
-      reject(new RedemetApiError(
-        "REDEMET_NETWORK_ERROR",
-        "Não foi possível conectar à REDEMET.",
-        502
-      ));
-    });
-
-    request.end();
+function requestJson(url, apiKey, deadline) {
+  return requestText(https, url, {
+    headers: { Accept: "application/json", "X-Api-Key": apiKey },
+    timeoutMs: getTimeoutMs(),
+    deadline,
+    timeoutError: () => new RedemetApiError(
+      "REDEMET_TIMEOUT", "A consulta à REDEMET excedeu o tempo limite.", 504
+    ),
+    networkError: () => new RedemetApiError(
+      "REDEMET_NETWORK_ERROR", "Não foi possível conectar à REDEMET.", 502
+    )
   });
 }
 

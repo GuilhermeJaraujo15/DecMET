@@ -1,8 +1,15 @@
 import { AviationWeatherError, getLatestMetarByIcao } from "../services/aviationWeather.service.js";
 import { RedemetApiError, getLatestRedemetMetarByIcao } from "../services/redemet.service.js";
+import { cachePublicResponse, disableResponseCache } from "../utils/http-cache.js";
 
 const ICAO_PATTERN = /^[A-Z]{4}$/;
 const DEFAULT_METAR_CACHE_TTL_SECONDS = 60;
+const MAX_CDN_TTL_SECONDS = 30;
+// vercel.json allows 15 s: reserve 3 s for runtime/serialization overhead.
+const METAR_DEADLINE_MS = 12000;
+const NOAA_RESERVED_MS = 3000;
+const MIN_PROVIDER_BUDGET_MS = 500;
+const MAX_CACHE_ENTRIES = 1000;
 const STALE_CACHE_GRACE_MS = 5 * 60 * 1000;
 const STALE_CACHE_ERROR_CODES = new Set([
   "NOAA_RATE_LIMIT",
@@ -26,8 +33,12 @@ const STALE_CACHE_ERROR_CODES = new Set([
   "REDEMET_UNEXPECTED_RESPONSE"
 ]);
 const metarCache = new Map();
+// Per instance only: reduces upstream work, not Function Invocations.
+const inFlightRequests = new Map();
 
 export async function getLatestMetar(req, res) {
+  const startedAt = Date.now();
+  disableResponseCache(res);
   const icao = normalizeIcao(req.params.icao);
 
   if (!ICAO_PATTERN.test(icao)) {
@@ -39,11 +50,11 @@ export async function getLatestMetar(req, res) {
   }
 
   const ttlSeconds = getMetarCacheTtlSeconds();
-  const ttlMs = ttlSeconds * 1000;
   const cachedEntry = metarCache.get(icao);
   const now = Date.now();
 
   if (isCacheFresh(cachedEntry, now)) {
+    cacheMetarResponse(res, cachedEntry);
     return res.json(buildSuccessResponse(
       cachedEntry.data,
       {
@@ -55,14 +66,9 @@ export async function getLatestMetar(req, res) {
   }
 
   try {
-    const metarResult = await getLatestMetarWithProviderRouting(icao);
-    const fetchedAt = Date.now();
-    metarCache.set(icao, {
-      data: metarResult.data,
-      providerResult: metarResult,
-      fetchedAt,
-      expiresAt: fetchedAt + ttlMs
-    });
+    const entry = await fetchAndCacheMetar(icao, ttlSeconds, startedAt + METAR_DEADLINE_MS);
+    const metarResult = entry.providerResult;
+    cacheMetarResponse(res, entry);
 
     return res.json(buildSuccessResponse(
       metarResult.data,
@@ -73,6 +79,7 @@ export async function getLatestMetar(req, res) {
       metarResult
     ));
   } catch (error) {
+    disableResponseCache(res);
     if (error instanceof AviationWeatherError || error instanceof RedemetApiError) {
       console.error("METAR provider error:", {
         icao,
@@ -112,9 +119,51 @@ export async function getLatestMetar(req, res) {
   }
 }
 
-async function getLatestMetarWithProviderRouting(icao) {
+function fetchAndCacheMetar(icao, ttlSeconds, deadline) {
+  if (inFlightRequests.has(icao)) return inFlightRequests.get(icao);
+
+  const pending = (async () => {
+    const result = await getLatestMetarWithProviderRouting(icao, deadline);
+    if (Date.now() >= deadline) {
+      const timeout = result.provider === "REDEMET"
+        ? new RedemetApiError("REDEMET_TIMEOUT", "A consulta à REDEMET excedeu o tempo limite.", 504)
+        : createNoaaDeadlineError();
+      if (result.fallback) timeout.fallback = result.fallback;
+      throw timeout;
+    }
+    const fetchedAt = Date.now();
+    const entry = {
+      data: result.data,
+      providerResult: result,
+      fetchedAt,
+      expiresAt: fetchedAt + ttlSeconds * 1000
+    };
+    // Keep expired entries through the existing stale grace window.
+    for (const [key, cached] of metarCache) {
+      if (cached.expiresAt + STALE_CACHE_GRACE_MS < fetchedAt) metarCache.delete(key);
+    }
+    metarCache.delete(icao);
+    while (metarCache.size >= MAX_CACHE_ENTRIES) {
+      metarCache.delete(metarCache.keys().next().value);
+    }
+    metarCache.set(icao, entry);
+    return entry;
+  })();
+  const shared = pending.finally(() => {
+    inFlightRequests.delete(icao);
+  });
+  inFlightRequests.set(icao, shared);
+  return shared;
+}
+
+function cacheMetarResponse(res, entry) {
+  const remainingSeconds = Math.floor((entry.expiresAt - Date.now()) / 1000);
+  cachePublicResponse(res, Math.min(MAX_CDN_TTL_SECONDS, remainingSeconds));
+}
+
+async function getLatestMetarWithProviderRouting(icao, deadline) {
   if (!isBrazilianIcao(icao)) {
-    const data = await getLatestMetarByIcao(icao);
+    const data = await getNoaaWithinDeadline(icao, deadline);
     return {
       data,
       source: "NOAA AviationWeather",
@@ -123,7 +172,7 @@ async function getLatestMetarWithProviderRouting(icao) {
   }
 
   try {
-    const data = await getLatestRedemetMetarByIcao(icao);
+    const data = await getLatestRedemetMetarByIcao(icao, { deadline: deadline - NOAA_RESERVED_MS });
     return {
       data,
       source: "REDEMET",
@@ -140,7 +189,7 @@ async function getLatestMetarWithProviderRouting(icao) {
     let data;
 
     try {
-      data = await getLatestMetarByIcao(icao);
+      data = await getNoaaWithinDeadline(icao, deadline);
     } catch (noaaError) {
       noaaError.fallback = {
         from: "REDEMET",
@@ -163,6 +212,19 @@ async function getLatestMetarWithProviderRouting(icao) {
       }
     };
   }
+}
+
+function createNoaaDeadlineError() {
+  return new AviationWeatherError(
+    "NOAA_TIMEOUT",
+    "A consulta ao serviço meteorológico excedeu o tempo limite. Tente novamente em instantes.",
+    504
+  );
+}
+
+function getNoaaWithinDeadline(icao, deadline) {
+  if (deadline - Date.now() < MIN_PROVIDER_BUDGET_MS) throw createNoaaDeadlineError();
+  return getLatestMetarByIcao(icao, { deadline });
 }
 
 function normalizeIcao(value) {

@@ -5,6 +5,7 @@
   "description": "DecMET frontend and serverless API",
   "type": "module",
   "scripts": {
+    "test": "node --experimental-vm-modules --test tests/*.test.js",
     "build:css": "tailwindcss -c backend/tailwind.config.cjs -i public/css/tailwind-input.css -o public/css/tailwind.css --minify",
     "build": "npm run build:css",
     "dev": "concurrently \"tailwindcss -c backend/tailwind.config.cjs -i public/css/tailwind-input.css -o public/css/tailwind.css --watch\" \"node backend/server.js\"",
