@@ -1,3 +1,23 @@
+(EN)
+
+DecMET — METAR Lookup and Decoding System
+
+DecMET is a web-based system designed for looking up and interpreting METAR messages, developed for students and aviation enthusiasts.
+
+The platform allows users to check real-time weather conditions at airfields using meteorological data from the REDEMET (Air Force Command Meteorological Network) API and NOAA (National Oceanic and Atmospheric Administration).
+
+Main Feature:
+
+What sets the system apart is its ability to transform raw METAR data into readable information, enabling a faster and more intuitive understanding of an airfield’s weather conditions. But that’s not all—it also retrieves the ICAO code for thousands of airfields and allows users to view the most recent METAR, via ICAO, directly within the system.
+
+Infrastructure:
+
+• Front-end: HTML, Vanilla JavaScript, and Tailwind CSS; • Backend: Node.js + Express; • Database: MySQL (Aiven DBaaS); • Primary Source APIs: REDEMET and NOAA; • Hosting: Render (with a custom domain).
+
+Depending on access permissions, the system is available in a production environment via a custom domain, as indicated in the repository’s “About” section.
+
+(PT)
+
 DecMET — Sistema de Consulta e Decodificação de METAR
 
 O DecMET é um sistema web voltado para consulta e interpretação de mensagens METAR, desenvolvido para estudantes e entusiastas da área de aviação.
