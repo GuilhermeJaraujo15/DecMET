@@ -5,9 +5,9 @@ export function disableResponseCache(res) {
   res.set("Vercel-CDN-Cache-Control", "no-store");
 }
 
-export function cachePublicResponse(res, ttlSeconds) {
+export function cachePublicResponse(res, ttlSeconds, { negative = false, swr = 0 } = {}) {
   const ttl = Math.floor(ttlSeconds);
-  if (!Number.isFinite(ttl) || ttl < 1 || res.statusCode !== 200) {
+  if (!Number.isFinite(ttl) || ttl < 1 || (res.statusCode !== 200 && !(negative && res.statusCode === 404))) {
     disableResponseCache(res);
     return;
   }
@@ -15,5 +15,6 @@ export function cachePublicResponse(res, ttlSeconds) {
   res.set("Cache-Control", "public, max-age=0, must-revalidate");
   // Other CDNs should revalidate; only Vercel receives shared freshness.
   res.set("CDN-Cache-Control", "public, max-age=0, must-revalidate");
-  res.set("Vercel-CDN-Cache-Control", `public, s-maxage=${ttl}, must-revalidate`);
+  const revalidation = swr > 0 ? `stale-while-revalidate=${Math.floor(swr)}` : "must-revalidate";
+  res.set("Vercel-CDN-Cache-Control", `public, s-maxage=${ttl}, ${revalidation}`);
 }

@@ -34,17 +34,20 @@ test("health, invalid namespaces, validation and CORS errors stay cheap and no-s
   const f = await fixture();
   await withServer(f.app, async base => {
     const health = await fetch(`${base}/api/health`);
-    assert.equal(health.status, 200); assert.deepEqual(await health.json(), { status: "ok" }); noStore(health);
+    assert.equal(health.status, 200); assert.deepEqual(await health.json(), { status: "ok" }); assert.equal(health.headers.get("vercel-cdn-cache-control"), "public, s-maxage=15, must-revalidate");
     for (const route of ["/api/foo", "/api/random", "/api/.env", "/api/wp-admin", "/css/global.css"]) {
       const res = await fetch(`${base}${route}`); assert.equal(res.status, 404); noStore(res);
       assert.equal((await res.json()).error, "NOT_FOUND");
     }
-    for (const query of ["q=SB&q=GR", "q[x]=SBGR", "q=", `q=${"A".repeat(101)}`]) {
+    for (const query of ["q=SB&q=GR", "q[x]=SBGR", "q=", "q=SBGR&provider=NOAA", "q=SBGR&search=KJFK", `q=${"A".repeat(101)}`]) {
       const res = await fetch(`${base}/api/aeroportos/search?${query}`);
       assert.equal(res.status, 400); noStore(res);
     }
     const invalidIcao = await fetch(`${base}/api/metar/1234`);
     assert.equal(invalidIcao.status, 400); noStore(invalidIcao);
+    for (const route of ["/api/health?x=1", "/api/metar/SBGR?provider=NOAA", "/api/metar/SBGR?icao=SBGR", "/api/aeroportos/1?q=SBGR"]) {
+      const res = await fetch(`${base}${route}`); assert.equal(res.status, 400); noStore(res);
+    }
     const denied = await fetch(`${base}/api/metar/SBGR`, { headers: { Origin: "https://invalid.example" } });
     assert.equal(denied.status, 403); noStore(denied);
     assert.equal((await denied.json()).error, "CORS_ORIGIN_DENIED");
@@ -67,7 +70,7 @@ test("real Express responses preserve CORS Vary, ETag, HEAD semantics and cache 
     ]) {
       const res = await fetch(`${base}${route}`, { headers: { Origin: base } });
       assert.equal(res.status, 200); assert.equal((await res.json()).success, true);
-      assert.equal(res.headers.get("vercel-cdn-cache-control"), `public, s-maxage=${ttl}, must-revalidate`);
+      assert.equal(res.headers.get("vercel-cdn-cache-control"), `public, s-maxage=${ttl}, ${route.startsWith("/api/metar/") ? "stale-while-revalidate=15" : "must-revalidate"}`);
       assert.equal(res.headers.get("cache-control"), "public, max-age=0, must-revalidate");
       assert.match(res.headers.get("vary"), /Origin/);
       assert.equal(res.headers.get("access-control-allow-origin"), base);
@@ -86,7 +89,15 @@ test("Vercel config sends only API paths to the Function and has no METAR self-r
   const config = JSON.parse(await fs.readFile(path.join(root, "vercel.json"), "utf8"));
   assert.equal(config.outputDirectory, "public");
   assert.equal(config.functions["api/index.js"].maxDuration, 15);
-  assert.deepEqual(config.rewrites, [{ source: "/api/:path*", destination: "/api/index.js" }]);
+  assert.equal(config.rewrites.length, 7);
+  assert.ok(config.rewrites.every(rule => !rule.source.includes(":")), "No named captures injected as query strings");
+  const matches = pathname => config.rewrites.some(rule => {
+    const pattern = rule.source.replace(/:\w+\(([^)]+)\)/g, "($1)");
+    return new RegExp("^" + pattern + "$").test(pathname);
+  });
+  for (const p of ["/api/health", "/api/metar/SBGR", "/api/metar/scel", "/api/aeroportos", "/api/aeroportos/search", "/api/aeroportos/sugestoes", "/api/aeroportos/icao/SBGR", "/api/aeroportos/123"]) assert.ok(matches(p), p);
+  for (const p of ["/api/health/", "/api/metar/SBGR/", "/api/aeroportos/", "/api/aeroportos/search/", "/api/aeroportos/icao/SBGR/", "/api/aeroportos/1/"]) assert.ok(matches(p), p);
+  for (const p of ["/api/wp-admin", "/api/login", "/api/random", "/api/.env", "/api/aeroportos/login", "/api/metar/SBGR/x", "/api/metar/1234", "/", "/metar.html"]) assert.ok(!matches(p), p);
   assert.ok(config.redirects.every(rule => rule.source !== rule.destination && !rule.destination.startsWith("/api/")));
   assert.ok(!config.redirects.some(rule => rule.source === "/metar.html"));
   assert.equal(config.redirects.find(rule => rule.source === "/pages/apiMet.html").destination, "/metar.html");

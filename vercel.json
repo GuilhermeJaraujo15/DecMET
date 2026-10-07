@@ -71,7 +71,31 @@
   ],
   "rewrites": [
     {
-      "source": "/api/:path*",
+      "source": "/api/health(/?)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api/metar/([A-Za-z]{4})(/?)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api/aeroportos(/?)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api/aeroportos/search(/?)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api/aeroportos/sugestoes(/?)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api/aeroportos/icao/([A-Za-z]{4})(/?)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api/aeroportos/([0-9]{1,10})(/?)",
       "destination": "/api/index.js"
     }
   ],

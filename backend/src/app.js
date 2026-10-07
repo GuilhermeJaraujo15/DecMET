@@ -3,7 +3,10 @@ import express from "express";
 import cors from "cors";
 import aeroportosRoutes from "./routes/aeroportos.routes.js";
 import metarRoutes from "./routes/metar.routes.js";
-import { disableResponseCache } from "./utils/http-cache.js";
+import { disableResponseCache, cachePublicResponse } from "./utils/http-cache.js";
+import { POLICY } from "./config/policy.js";
+import { observeApi } from "./utils/observability.js";
+import { validateQuery } from "./utils/query-contract.js";
 
 const LOCAL_PORTS = new Set(["3000", "3001", "5173", "5500"]);
 const PRODUCTION_ORIGINS = ["https://decmet.com.br"];
@@ -19,6 +22,7 @@ export function createApiApp() {
 
 export function configureApiApp(app) {
   app.disable("x-powered-by");
+  app.use(observeApi);
   app.use((req, res, next) => {
     disableResponseCache(res);
     next();
@@ -27,6 +31,8 @@ export function configureApiApp(app) {
   app.use(express.json({ limit: "64kb" }));
 
   app.get("/api/health", (req, res) => {
+    if (!validateQuery(req, res)) return;
+    cachePublicResponse(res, POLICY.healthTtl);
     res.json({ status: "ok" });
   });
 
@@ -59,14 +65,7 @@ export function installApiFinalHandlers(app, options = {}) {
     const status = getHttpStatus(err);
     const error = getPublicErrorCode(err, status);
 
-    console.error("API error:", {
-      path: req.originalUrl,
-      method: req.method,
-      status,
-      error,
-      code: err.code,
-      name: err.name
-    });
+    res.locals.code = error;
 
     return res.status(status).json({
       success: false,
@@ -107,12 +106,6 @@ function createOriginValidator(req) {
     if (allowedOrigins.has(normalizedOrigin) || isSameOriginRequest(req, normalizedOrigin)) {
       return callback(null, true);
     }
-
-    console.warn("[CORS] Origin not allowed:", {
-      origin: normalizedOrigin,
-      host: getRequestHost(req),
-      vercelEnv: process.env.VERCEL_ENV || null
-    });
 
     return callback(createCorsError());
   };

@@ -1,3 +1,4 @@
+import { normalizeAirportQuery, isSuggestionQueryEligible, isAirportSearchEligible } from "./shared/api-contract.js";
 import { enviarEventoGA } from './analytics.js';
 
 /**
@@ -13,12 +14,13 @@ const API_ENDPOINTS = {
 };
 
 const AUTOCOMPLETE_DEBOUNCE_MS = 300;
-const AUTOCOMPLETE_MIN_CHARS = 2;
-const AUTOCOMPLETE_MIN_CHARS_TEXT = 3;
 const AIRPORT_SEARCH_STORAGE_KEY = "decmet.airportSearch.lastQuery";
 const AIRPORT_SEARCH_STORAGE_TTL_MS = 12 * 60 * 60 * 1000;
 const ICAO_CODE_PATTERN = /^[A-Z]{4}$/;
 const COPY_FEEDBACK_TIMEOUT_MS = 1800;
+const suggestionCache = new Map();
+const SUGGESTION_CACHE_TTL_MS = 60000;
+const SUGGESTION_CACHE_MAX = 50;
 
 const OPERATIONAL_TYPE_LABELS = {
   "large_airport": "airports.type.airplane",
@@ -40,16 +42,6 @@ function buildApiUrl(path, params = {}) {
     url.searchParams.set(key, value);
   });
   return `${url.pathname}${url.search}`;
-}
-
-function normalizeAirportQuery(value) {
-  // The backend already compares uppercase terms. Keep internal spaces literal.
-  return String(value ?? "").trim().toUpperCase();
-}
-
-function isSuggestionQueryEligible(query) {
-  return query.length <= 100 && (query.length >= AUTOCOMPLETE_MIN_CHARS_TEXT ||
-    (query.length >= AUTOCOMPLETE_MIN_CHARS && /^[A-Z]+$/.test(query)));
 }
 
 function safeSetDynamicMeta(titleKey, descriptionKey, variables = {}, fallbackTitle = "") {
@@ -105,12 +97,8 @@ function isValidIcaoCode(value) {
   return ICAO_CODE_PATTERN.test(value);
 }
 
-function getProviderForIcao(icao) {
-  return icao.startsWith("S") ? "REDEMET" : "NOAA";
-}
-
-function sendMetarApiErrorEvent({ provider, icao, code }) {
-  enviarEventoGA('erro_api_metar', {
+function sendAirportApiErrorEvent({ provider, icao, code }) {
+  enviarEventoGA('erro_api_airport', {
     provedor_utilizado: provider,
     icao_codigo: icao,
     codigo_erro: String(code || "UNKNOWN_ERROR")
@@ -309,6 +297,13 @@ function handleClickOutside(event) {
  */
 async function fetchAirportSuggestions(query) {
   if (!isSuggestionQueryEligible(query)) return;
+  const cached = suggestionCache.get(query);
+  if (cached && cached.expiresAt > Date.now()) {
+    if (cached.suggestions.length) renderAirportSuggestions(cached.suggestions);
+    else closeSuggestions();
+    return;
+  }
+  suggestionCache.delete(query);
   const revision = suggestionsRevision;
   const controller = new AbortController();
   currentAbortController = controller;
@@ -324,6 +319,10 @@ async function fetchAirportSuggestions(query) {
     const data = await response.json();
     if (controller.signal.aborted || revision !== suggestionsRevision) return;
 
+    if (data.success && Array.isArray(data.suggestions)) {
+      while (suggestionCache.size >= SUGGESTION_CACHE_MAX) suggestionCache.delete(suggestionCache.keys().next().value);
+      suggestionCache.set(query, { suggestions: data.suggestions, expiresAt: Date.now() + SUGGESTION_CACHE_TTL_MS });
+    }
     if (data.success && data.suggestions && data.suggestions.length > 0) {
       renderAirportSuggestions(data.suggestions);
     } else {
@@ -494,7 +493,7 @@ async function handleAirportSearch(event) {
   closeSuggestions();
   if (searchInProgress) return;
 
-  const query = searchQueryInput.value.trim();
+  const query = normalizeAirportQuery(searchQueryInput.value);
   const icao = normalizeIcaoCode(query);
   const isIcaoSearch = isValidIcaoCode(icao) && /^[a-zA-Z]{4}$/.test(query);
   const searchTerm = isIcaoSearch ? icao : query;
@@ -504,12 +503,12 @@ async function handleAirportSearch(event) {
     return;
   }
 
-  if (!isIcaoSearch && searchTerm.length < AUTOCOMPLETE_MIN_CHARS_TEXT) {
+  if (!isAirportSearchEligible(searchTerm)) {
     renderAirportValidationError("Digite ao menos 3 caracteres para pesquisar por nome, cidade, país, IATA ou ICAO.");
     return;
   }
 
-  const providerUsed = isIcaoSearch ? getProviderForIcao(icao) : "DATABASE";
+  const providerUsed = "DATABASE";
 
   // GA4 is fired before the network request so API latency/failure does not hide search intent.
   enviarEventoGA(isIcaoSearch ? 'search_icao' : 'search_airport', {
@@ -544,7 +543,7 @@ async function handleAirportSearch(event) {
   } catch (error) {
     if (revision !== inputRevision) return;
     if (isIcaoSearch) {
-      sendMetarApiErrorEvent({ provider: providerUsed, icao, code: error.status || error.message });
+      sendAirportApiErrorEvent({ provider: providerUsed, icao, code: error.status || error.message });
     }
     console.error("Error searching airports:", error);
     setAirportLoadingState(false);

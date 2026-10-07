@@ -71,7 +71,7 @@ test("short suggestions and empty successful searches keep existing contracts", 
 test("SQL errors release connections and cannot be cached", async () => {
   const f = await fixture({ fail: true });
   for (const name of ["searchAirports", "getAirportSuggestions", "getAirportById", "getAirportByIcao"]) {
-    const res = await f.call(name, { query: { q: "SBGR" }, params: { id: "1", icao: "SBGR" } });
+    const res = await f.call(name, { query: name.startsWith("getAirportBy") ? {} : { q: "SBGR" }, params: { id: "1", icao: "SBGR" } });
     assert.equal(res.statusCode, 503);
     for (const header of ["cache-control", "cdn-cache-control", "vercel-cdn-cache-control"]) assert.equal(res.headers[header], "no-store");
   }
@@ -92,4 +92,13 @@ test("LIKE wildcards are literal, SQL remains parameterized with unchanged limit
   }
   await f.call("searchAirports", { query: { search: " santos " } });
   assert.equal(f.queries.at(-1).params[0], "SANTOS");
+});
+
+test("short or wildcard-only full searches and unknown/ambiguous parameters never reach SQL", async () => {
+  const f = await fixture();
+  for (const query of [{ q: "A" }, { q: "AB" }, { q: "%" }, { q: "___" }, { q: "%%%" },
+    { q: "SBGR", provider: "NOAA" }, { q: "SBGR", search: "KJFK" }, { q: "SBGR", unknown: "x" }]) {
+    assert.equal((await f.call("searchAirports", { query })).statusCode, 400);
+  }
+  assert.equal(f.stats().acquired, 0);
 });

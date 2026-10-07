@@ -1,3 +1,7 @@
+import { normalizeAirportQuery, isSuggestionQueryEligible, isAirportSearchEligible } from "../../../public/js/shared/api-contract.js";
+import { POLICY } from "../config/policy.js";
+import { validateQuery } from "../utils/query-contract.js";
+import { logEvent } from "../utils/observability.js";
 /**
  * Airport Controller
  * Handles search and suggestions for airport data from MySQL
@@ -68,16 +72,7 @@ function normalizeAirport(row) {
 /**
  * Normalize search query for safe database queries
  */
-function normalizeQuery(query) {
-  if (typeof query !== "string" || query.length > 100) return null;
-
-  let normalized = query.trim().toUpperCase();
-
-  // Reject if empty or too long
-  if (!normalized || normalized.length > 100) return null;
-
-  return normalized;
-}
+function normalizeQuery(query) { return normalizeAirportQuery(query) || null; }
 
 function escapeLike(value) {
   // Explicit escape character works with or without NO_BACKSLASH_ESCAPES.
@@ -90,6 +85,7 @@ function escapeLike(value) {
  */
 export async function getAirportById(req, res) {
   disableResponseCache(res);
+  if (!validateQuery(req, res, [])) return;
   try {
     const { id } = req.params;
 
@@ -123,7 +119,7 @@ export async function getAirportById(req, res) {
         LIMIT 1
       `;
 
-      const [rows] = await connection.execute(sqlQuery, [id]);
+      const [rows] = await executeAirportQuery(connection, "airport_detail_id", sqlQuery, [id]);
 
       if (rows.length === 0) {
         return res.status(404).json({
@@ -133,7 +129,7 @@ export async function getAirportById(req, res) {
         });
       }
 
-      cachePublicResponse(res, 3600);
+      cachePublicResponse(res, POLICY.airportDetailTtl);
       res.json({
         success: true,
         result: normalizeAirport(rows[0])
@@ -154,6 +150,7 @@ export async function getAirportById(req, res) {
  */
 export async function getAirportByIcao(req, res) {
   disableResponseCache(res);
+  if (!validateQuery(req, res, [])) return;
   try {
     const icao = normalizeCode(req.params.icao);
 
@@ -187,7 +184,7 @@ export async function getAirportByIcao(req, res) {
         LIMIT 1
       `;
 
-      const [rows] = await connection.execute(sqlQuery, [icao]);
+      const [rows] = await executeAirportQuery(connection, "airport_detail_icao", sqlQuery, [icao]);
 
       if (rows.length === 0) {
         return res.status(404).json({
@@ -197,7 +194,7 @@ export async function getAirportByIcao(req, res) {
         });
       }
 
-      cachePublicResponse(res, 3600);
+      cachePublicResponse(res, POLICY.airportDetailTtl);
       res.json({
         success: true,
         result: normalizeAirport(rows[0])
@@ -218,14 +215,15 @@ export async function getAirportByIcao(req, res) {
  */
 export async function searchAirports(req, res) {
   disableResponseCache(res);
+  if (!validateQuery(req, res, ["q", "search"])) return;
   try {
     const search = req.query.search ?? req.query.q;
     const query = normalizeQuery(search);
 
-    if (!query) {
+    if (!query || !isAirportSearchEligible(query)) {
       return res.status(400).json({
         error: "Invalid search query",
-        message: "Search term must be 1-100 characters"
+        message: "Search term must be 3-100 characters"
       });
     }
 
@@ -272,7 +270,7 @@ export async function searchAirports(req, res) {
         LIMIT 25
       `;
 
-      const [rows] = await connection.execute(sqlQuery, [
+      const [rows] = await executeAirportQuery(connection, "airport_search", sqlQuery, [
         query, query,
         likePattern, likePattern, likePattern,
         query, query,
@@ -280,7 +278,7 @@ export async function searchAirports(req, res) {
       ]);
 
       const results = rows.map(normalizeAirport);
-      cachePublicResponse(res, 300);
+      cachePublicResponse(res, POLICY.airportSearchTtl);
 
       if (results.length === 0) {
         return res.json({
@@ -312,6 +310,7 @@ export async function searchAirports(req, res) {
  */
 export async function getAirportSuggestions(req, res) {
   disableResponseCache(res);
+  if (!validateQuery(req, res, ["q", "search"])) return;
   try {
     const search = req.query.search ?? req.query.q;
     const query = normalizeQuery(search);
@@ -325,7 +324,7 @@ export async function getAirportSuggestions(req, res) {
 
     // For short queries, only suggest if looks like a code
     if (query.length < 2) {
-      cachePublicResponse(res, 300);
+      cachePublicResponse(res, POLICY.airportSearchTtl);
       return res.json({
         success: true,
         suggestions: [],
@@ -333,8 +332,8 @@ export async function getAirportSuggestions(req, res) {
       });
     }
 
-    if (query.length < 3 && !/^[A-Z]{2,4}$/.test(query)) {
-      cachePublicResponse(res, 300);
+    if (!isSuggestionQueryEligible(query)) {
+      cachePublicResponse(res, POLICY.airportSearchTtl);
       return res.json({
         success: true,
         suggestions: [],
@@ -382,7 +381,7 @@ export async function getAirportSuggestions(req, res) {
         LIMIT 10
       `;
 
-      const [rows] = await connection.execute(sqlQuery, [
+      const [rows] = await executeAirportQuery(connection, "airport_suggestions", sqlQuery, [
         codePrefixPattern, codePrefixPattern,
         likePattern, likePattern,
         query, query,
@@ -390,7 +389,7 @@ export async function getAirportSuggestions(req, res) {
       ]);
 
       const suggestions = rows.map(normalizeAirport);
-      cachePublicResponse(res, 300);
+      cachePublicResponse(res, POLICY.airportSearchTtl);
 
       res.json({
         success: true,
@@ -407,9 +406,24 @@ export async function getAirportSuggestions(req, res) {
   }
 }
 
+async function executeAirportQuery(connection, route, sql, parameters) {
+  const started = Date.now();
+  let status = 200;
+  try {
+    return await connection.execute(sql, parameters);
+  } catch (error) {
+    status = getPublicDatabaseError(error).status;
+    throw error;
+  } finally {
+    logEvent({ event: "database_query", route, status, durationMs: Date.now() - started });
+  }
+}
+
 function sendDatabaseError(res, context, error) {
   disableResponseCache(res);
   logDatabaseError(context, error);
+  res.locals ||= {};
+  res.locals.code = "DATABASE_ERROR";
   const publicError = getPublicDatabaseError(error);
 
   return res.status(publicError.status).json({

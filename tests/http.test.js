@@ -76,3 +76,9 @@ test("provider wrappers preserve timeout defaults, env overrides, deadlines and 
     }
   }
 });
+
+test("oversized upstream response is aborted instead of consuming unbounded memory", async () => {
+  await withServer((req, res) => res.end("x".repeat(1024 * 1024 + 1)), async base => {
+    await assert.rejects(requestText(http, new URL(base), options()), { code: "TEST_NETWORK" });
+  });
+});

@@ -182,8 +182,8 @@ function parseJsonPayload(body) {
 }
 
 function normalizeProviderCode(value, fallback) {
-  const text = String(value ?? "").trim();
-  return text ? `REDEMET_${text}` : fallback;
+  // Provider messages are untrusted and can echo credentials or request URLs.
+  return fallback;
 }
 
 function findLatestReport(reports) {

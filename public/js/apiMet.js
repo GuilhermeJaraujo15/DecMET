@@ -1,3 +1,4 @@
+import { isBrazilianIcao } from "./shared/api-contract.js";
 import { enviarEventoGA } from './analytics.js';
 
 const ICAO_PATTERN = /^[A-Z]{4}$/;
@@ -49,6 +50,8 @@ let statePanels = {};
 
 let currentRawMetar = "";
 let currentErrorKey = null;
+let queryInProgress = false;
+let inputRevision = 0;
 
 onDomReady(initMetarQueryPage);
 
@@ -134,6 +137,7 @@ function hasRequiredDom() {
 }
 
 function handleIcaoInput(event) {
+  inputRevision++;
   const normalizedValue = normalizeIcao(event.target.value);
   event.target.value = normalizedValue;
 
@@ -147,6 +151,7 @@ function handleIcaoInput(event) {
 
 async function handleMetarSubmit(event) {
   event.preventDefault();
+  if (queryInProgress) return;
 
   const icao = normalizeIcao(icaoInput.value);
   icaoInput.value = icao;
@@ -157,6 +162,8 @@ async function handleMetarSubmit(event) {
     return;
   }
 
+  queryInProgress = true;
+  const revision = inputRevision;
   setLoading(true);
 
   try {
@@ -164,6 +171,7 @@ async function handleMetarSubmit(event) {
     resetResult();
 
     const response = await fetchMetarByIcao(icao);
+    if (revision !== inputRevision) { showState("empty"); return; }
 
     if (response.fallback) {
       sendMetarApiErrorEvent({
@@ -186,6 +194,7 @@ async function handleMetarSubmit(event) {
     renderMetarResult(response, { persist: true, icao });
     showState("result");
   } catch (error) {
+    if (revision !== inputRevision) { showState("empty"); return; }
     sendMetarApiErrorEvent({
       provider: getProviderForIcao(icao),
       icao,
@@ -193,6 +202,7 @@ async function handleMetarSubmit(event) {
     });
     showError("metar.error.connection");
   } finally {
+    queryInProgress = false;
     setLoading(false);
   }
 }
@@ -209,7 +219,7 @@ function isValidIcao(icao) {
 }
 
 function getProviderForIcao(icao) {
-  return icao.startsWith("S") ? "REDEMET" : "NOAA";
+  return isBrazilianIcao(icao) ? "REDEMET" : "NOAA";
 }
 
 function sendMetarApiErrorEvent({ provider, icao, code }) {

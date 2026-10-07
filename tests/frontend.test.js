@@ -9,6 +9,7 @@ const airport = { id: 1, display_icao: "SBGR", icao: "SBGR", name: "Guarulhos", 
 async function browser(page, fetchImpl, saved = {}) {
   const elements = new Map(), timers = new Map(), requests = [], storage = new Map(Object.entries(saved));
   let now = 0, timerId = 0;
+  const wallStart = Date.now();
   function element(id) {
     const classes = new Set(), handlers = new Map();
     let html = "", elementId = id;
@@ -49,6 +50,7 @@ async function browser(page, fetchImpl, saved = {}) {
     mocks: { "public/js/analytics.js": { enviarEventoGA() {} } },
     globals: {
       document, AbortController, structuredClone,
+      Date: class extends Date { static now() { return wallStart + now; } },
       window: { location: { origin: "https://decmet.test" }, addEventListener: (type, fn) => windowHandlers.set(type, fn), DecMETI18n: { t: key => key } },
       localStorage: { getItem: key => storage.get(key) ?? null, setItem: (key, value) => storage.set(key, value), removeItem: key => storage.delete(key) },
       setTimeout: (fn, delay) => { timers.set(++timerId, { fn, at: now + delay }); return timerId; },
@@ -147,4 +149,38 @@ test("restoring local METAR and airport state does not fetch", async () => {
   const metar = await browser("metar", null, { "decmet.metarQuery.lastResult": JSON.stringify({ icao: "SBGR", savedAt: now, response: { success: true, data: { icao: "SBGR", rawMetar: "SBGR 121200Z CAVOK" } } }) });
   const airports = await browser("airports", null, { "decmet.airportSearch.lastQuery": JSON.stringify({ query: "SBGR", savedAt: now, results: [airport] }) });
   assert.equal(metar.requests.length + airports.requests.length, 0);
+});
+
+test("suggestion cache reuses normalized terms without another request", async () => {
+  const b = await browser("airports");
+  await b.type("Santos"); await b.tick();
+  await b.type("  santos  "); await b.tick();
+  assert.equal(b.requests.length, 1);
+  for (const q of ["%", "___", "12", "a".repeat(101)]) { await b.type(q); await b.tick(); }
+  assert.equal(b.requests.length, 1);
+  await b.tick(60001); await b.type("Santos"); await b.tick();
+  assert.equal(b.requests.length, 2);
+});
+
+test("submit aborts active autocomplete and late suggestions cannot reappear", async () => {
+  const pending = deferred();
+  const b = await browser("airports", url => url.includes("sugestoes") ? pending.promise : success({ success: true, results: [] }));
+  await b.type("Santos"); await b.tick();
+  await b.submit();
+  assert.equal(b.requests[0].options.signal.aborted, true);
+  pending.resolve(success({ success: true, suggestions: [airport] })); await flush();
+  assert.equal(b.elements.has("airportSuggestionsList"), false);
+  assert.equal(b.requests.length, 2);
+});
+
+test("METAR blocks concurrent submit and ignores a response after input changes", async () => {
+  const pending = deferred();
+  const b = await browser("metar", () => pending.promise);
+  await b.type("SBGR"); const first = b.submit(); await b.submit();
+  assert.equal(b.requests.length, 1);
+  await b.type("SCEL");
+  pending.resolve(success({ success: true, data: { icao: "SBGR", rawMetar: "SBGR TEST" } }));
+  await first;
+  assert.equal(b.elements.get("resultState").hidden, true);
+  assert.equal(b.elements.get("metarSubmitButton").disabled, false);
 });

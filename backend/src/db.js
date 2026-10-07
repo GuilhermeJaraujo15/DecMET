@@ -1,4 +1,5 @@
 import mysql from "mysql2/promise";
+import { logEvent } from "./utils/observability.js";
 import "./config/env.js";
 
 const DEFAULT_CONNECTION_LIMIT = 2;
@@ -90,13 +91,8 @@ export function isTransientDatabaseError(error) {
 export function logDatabaseError(context, error) {
   const cause = error?.cause || error;
 
-  console.error("Database error:", {
-    context,
-    code: cause?.code,
-    errno: cause?.errno,
-    sqlState: cause?.sqlState,
-    name: cause?.name
-  });
+  logEvent({ event: "database_error", route: context,
+    code: /^[A-Z_0-9]+$/.test(cause?.code || "") ? cause.code : "DATABASE_ERROR" });
 }
 
 function buildPoolConfig() {

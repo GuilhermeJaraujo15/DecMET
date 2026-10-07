@@ -1,3 +1,4 @@
+import { POLICY } from "../config/policy.js";
 // Absolute deadline includes DNS, connection, headers and the whole response.
 // No retries or redirects. Provider wrappers keep their public error contracts.
 export function requestText(client, url, { headers, timeoutMs, deadline, timeoutError, networkError }) {
@@ -40,9 +41,14 @@ export function requestText(client, url, { headers, timeoutMs, deadline, timeout
           response.destroy();
           return;
         }
-        let body = "";
+        let body = "", bytes = 0;
         response.setEncoding("utf8");
-        response.on("data", chunk => { body += chunk; });
+        response.on("data", chunk => {
+          if (settled) return;
+          bytes += Buffer.byteLength(chunk);
+          if (bytes > POLICY.maxResponseBytes) return fail(networkError());
+          body += chunk;
+        });
         response.on("end", () => {
           if (settled) return;
           if (Date.now() >= expiresAt) {
