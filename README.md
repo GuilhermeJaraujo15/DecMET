@@ -12,7 +12,7 @@ What sets the system apart is its ability to transform raw METAR data into reada
 
 Infrastructure:
 
-• Front-end: HTML, Vanilla JavaScript, and Tailwind CSS; • Backend: Node.js + Express; • Database: MySQL (Aiven DBaaS); • Primary Source APIs: REDEMET and NOAA; • Hosting: Render (with a custom domain).
+• Front-end: HTML, Vanilla JavaScript, and Tailwind CSS; • Backend: Node.js + Express; • Database: MySQL (Aiven DBaaS); • Primary Source APIs: REDEMET and NOAA; • Hosting: Vercel (with a custom domain).
 
 Depending on access permissions, the system is available in a production environment via a custom domain, as indicated in the repository’s “About” section.
 
@@ -34,6 +34,6 @@ Infraestrutura:
 • Backend: Node.js + Express;
 • Banco de dados: MySQL (Aiven DBaaS);
 • API das Fontes Primárias: REDEMET e NOAA;
-• Hospedagem: Render (com domínio personalizado).
+• Hospedagem: Vercel (com domínio personalizado).
 
 Consoante ao acesso, o sistema está disponível em ambiente de produção via domínio personalizado, conforme indicado na seção About do repositório.
